@@ -1,0 +1,9 @@
+short name,name,ID in model,g/gDW
+PI,1-phosphatidyl-1D-myo-inositol,s_0089[c],0.003637
+ER,ergosterol,s_0666[c],0.013991
+SE,ergosterol ester,s_0672[c],0.003582
+FFA,fatty acid,s_0694[c],0.000779
+PS,phosphatidyl-L-serine,s_1337[c],0.003132
+PC,phosphatidylcholine,s_1346[c],0.01357
+PE,phosphatidylethanolamine,s_1351[c],0.003647
+TAG,triglyceride,s_1524[c],0.003609

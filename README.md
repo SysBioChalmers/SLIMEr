@@ -2,7 +2,7 @@
 
 * Brief Model Description:
 
-Collection of scripts for adding SLIME reactions into the genome-scale model of yeast.
+Collection of scripts for adding SLIME (Splitage of Lipids Into Measurable Entities) reactions into the genome-scale model of yeast.
 
 * Last update: 2017-11-28
 
