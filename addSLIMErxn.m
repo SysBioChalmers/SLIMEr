@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % model = addSLIMErxn(model,met)
 %
-% Benjamín J. Sánchez. Last update: 2017-11-28
+% Benjamín J. Sánchez. Last update: 2017-11-29
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function model = addSLIMErxn(model,rxnID)
@@ -36,12 +36,17 @@ switch backName
         tailsRxn = esters(strcmp(esters(:,1),specName),2);
         
     %Cases with specific FA name:
+    %OBS: For now, only marked ones are being added in the model
     case 'fatty acid'
-        FAs = {'myristate'     'C14:0'
-               'palmitate'     'C16:0'
-               'palmitoleate'  'C16:1'
-               'stearate'      'C18:0'
-               'oleate'        'C18:1'};
+        FAs = {'myristate'          'C14:0'     %
+               'myristoleate'       'C14:1'
+               'pentadecanoate'     'C15:0'
+               'palmitate'          'C16:0'     %
+               'palmitoleate'       'C16:1'     %
+               'stearate'           'C18:0'     %
+               'oleate'             'C18:1'     %
+               'nonadecanoate'      'C19:0'
+               'eicosanoate'        'C20:0'};
         tailsRxn = FAs(strcmp(FAs(:,1),specName),2);
         
     %Cases with format '(1-XX:Y, 2-XX:Y, ...)':

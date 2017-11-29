@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % model = SLIMEr(model,abundances)
 %
-% Benjamín J. Sánchez. Last update: 2017-11-27
+% Benjamín J. Sánchez. Last update: 2017-11-29
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function model = SLIMEr(model,data)
@@ -19,11 +19,6 @@ for i = 1:length(model.rxns)
         model = addSLIMErxn(model,model.rxns{i});
         printRxnFormula(model,model.rxns{i},true,true,true);
     end
-end
-
-%Add additional SLIME reactions for any unrpoduced FA:
-for i = 1:length(data.chainData.metNames)
-    
 end
 
 %Create lipid pseudo-rxn for backbones:
