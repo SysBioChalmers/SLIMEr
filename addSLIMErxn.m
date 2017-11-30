@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % model = addSLIMErxn(model,met)
 %
-% Benjamín J. Sánchez. Last update: 2017-11-29
+% Benjamín J. Sánchez. Last update: 2017-11-30
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function model = addSLIMErxn(model,rxnID)
