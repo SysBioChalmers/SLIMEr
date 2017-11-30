@@ -5,18 +5,23 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Original model:
-model_original = load('yeast_7.7.mat');
+model_original = load('yeast_7.8.mat');
 model_original = model_original.model;
 
-%Data:
-rxnPos = strcmp(model_original.rxns,'r_2108');
-data.lipidData.metIDs    = model_original.mets(model_original.S(:,rxnPos) < 0);            %format: s_XXXX[abc]
-data.lipidData.abundance = abs(model_original.S(model_original.S(:,rxnPos) < 0,rxnPos));   %mmol/gDW (how??)
-data.chainData.metNames  = {'C16:0 chain'
-                            'C16:1 chain'
-                            'C18:0 chain'
-                            'C18:1 chain'};     %format: CXX:Y chain
-data.chainData.abundance = [0.005/256;0.005/254;0.005/284;0.005/282]*1000;   %5 mg/gDW for each species = 2% in mass for all lipids
+%Lipid data:
+fid = fopen('lipid_data.csv');
+lipidData = textscan(fid,'%s %s %s %f32','Delimiter',',','HeaderLines',1);
+data.lipidData.metIDs    = lipidData{3};
+data.lipidData.abundance = lipidData{4};
+fclose(fid);
+
+%Chain data:
+fid = fopen('chain_data.csv');
+chainData = textscan(fid,'%s %s %f32','Delimiter',',','HeaderLines',1);
+data.chainData.metNames  = chainData{1};
+data.chainData.formulas  = chainData{2};
+data.chainData.abundance = chainData{3};
+fclose(fid);
 
 %Model with lipid composition corrected:
 model_correctedComp = changeLipidComp(model_original,data.lipidData);

@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% model = addSLIMErxn(model,met)
+% model = addSLIMErxn(model,rxnID)
 %
 % Benjamín J. Sánchez. Last update: 2017-11-30
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -20,6 +20,13 @@ backPos  = find(model.S(:,rxnPos) > 0);
 backID   = model.mets{backPos};
 backName = model.metNames{backPos};
 backName = backName(1:strfind(backName,'[')-2);
+
+%Stoich. coeff. for backbone: molecular weight of specific species
+try
+    specMW = getMWfromFormula(model.metFormulas(specPos));
+catch
+    specMW = 1;     %In case the formula has an "R" (6 sphingolipid isa rxns)
+end
 
 %Define number of tails to add:
 switch backName
@@ -75,20 +82,21 @@ end
 tailPos    = find(~cellfun(@isempty,strfind(model.metNames,' chain [cytoplasm]')));
 tailIDs    = model.mets(tailPos)';
 tailsModel = model.metNames(tailPos)';
+tailsMWs   = getMWfromFormula(model.metFormulas(tailPos)');
 tailCoeffs = zeros(size(tailIDs));
 
 %Match to corresponding tail:
 for i = 1:length(tailsRxn)
     tailName   = [tailsRxn{i} ' chain [cytoplasm]'];
     tailMatch  = strcmp(tailsModel,tailName);
-    tailCoeffs = tailCoeffs + tailMatch;
+    tailCoeffs = tailCoeffs + tailMatch.*tailsMWs;
 end
 
 %Create SLIME rxn (with same ID as previous ISA rxn but different name):
 model = addReaction(model, ...                    %model
                     {rxnID,rxnName}, ...          %rxn
                     [specID,backID,tailIDs], ...  %metabolites
-                    [-1,+1,tailCoeffs], ...       %stoichiometry
+                    [-1,specMW,tailCoeffs], ...   %stoichiometry
                     false, ...                    %reversibility
                     0, ...                        %LB
                     1000, ...                     %UB

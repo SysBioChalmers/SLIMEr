@@ -1,10 +1,8 @@
 # SLIMEr
 
-* Brief Model Description:
-
 Collection of scripts for adding SLIME (Splitage of Lipids Into Measurable Entities) reactions into the genome-scale model of yeast.
 
-* Last update: 2017-11-28
+Last update: 2017-11-30
 
 This repository is administered by Benjamín J. Sánchez ([@BenjaSanchez](https://github.com/benjasanchez)), Division of Systems and Synthetic Biology, Department of Biology and Biological Engineering, Chalmers University of Technology.
 
@@ -25,4 +23,5 @@ This repository is administered by Benjamín J. Sánchez ([@BenjaSanchez](https://
 
 ## Contributors
 
+* [Feiran Li](https://www.chalmers.se/en/staff/Pages/feiranl.aspx) ([@feiranl](https://github.com/feiranl)), Chalmers University of Technology, Gothenburg Sweden
 * [Benjamín J. Sánchez](https://www.chalmers.se/en/staff/Pages/bensan.aspx) ([@BenjaSanchez](https://github.com/benjasanchez)), Chalmers University of Technology, Gothenburg Sweden
