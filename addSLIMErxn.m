@@ -23,11 +23,15 @@ backName = backName(1:strfind(backName,'[')-2);
 
 %Define number of tails to add:
 switch backName
-    %Cases with format '(CXX)':
+    %Cases with format '(C2X)', for very long fatty acid chains:
     case {'inositol-P-ceramide'
           'inositol phosphomannosylinositol phosphoceramide'
           'mannosylinositol phosphorylceramide'}
-        tailsRxn = {};  %?????
+        if ~isempty(strfind(specName,'(C24)'))
+            tailsRxn = {'C16:0';'C24:0'};
+        elseif ~isempty(strfind(specName,'(C26)'))
+            tailsRxn = {'C16:0';'C26:0'};
+        end
         
     %Cases with specific erg-ester name:
     case 'ergosterol ester'
@@ -56,8 +60,8 @@ switch backName
           'phosphatidylethanolamine'
           'triglyceride'}
         %Find all tails:
-        tailPos = strfind(specName,':');
-        tailsRxn   = cell(size(tailPos));
+        tailPos  = strfind(specName,':');
+        tailsRxn = cell(size(tailPos));
         for i = 1:length(tailPos)
             tailsRxn{i} = ['C' specName(tailPos(i)-2:tailPos(i)+1)];
         end
