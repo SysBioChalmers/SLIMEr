@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % compareLipidDistributions
 %
-% Benjamín J. Sánchez. Last update: 2017-11-28
+% Benjamín J. Sánchez. Last update: 2017-12-01
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Original model:
@@ -24,10 +24,10 @@ data.chainData.abundance = chainData{3};
 fclose(fid);
 
 %Model with lipid composition corrected:
-model_correctedComp = changeLipidComp(model_original,data.lipidData);
+model_correctedComp = SLIMEr(model_original,data,false);
 
 %Model with both lipid and chain length constrained to data:
-model_SLIMEr = SLIMEr(model_original,data);
+model_SLIMEr = SLIMEr(model_original,data,true);
 
 %Simulate models:
 sol_original      = optimizeCbModel(model_original);
