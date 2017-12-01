@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % model = changeChainComp(model,chainData)
 %
-% Benjamín J. Sánchez. Last update: 2017-11-28
+% Benjamín J. Sánchez. Last update: 2017-12-01
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function model = changeChainComp(model,chainData)
@@ -31,19 +31,6 @@ model = addReaction(model, ...                      %model
                     1000, ...                       %UB
                     0);                             %c
 printRxnFormula(model,rxnID,true,true,true);
-
-%Add exchange rxn for tails:
-newID   = getNewIndex(model.rxns);
-rxnName = 'tail exchange';
-model   = addReaction(model, ...                      %model
-                      {['r_' newID],rxnName}, ...     %rxn
-                      tailID, ...                     %metabolites
-                      -1, ...                         %stoichiometry
-                      false, ...                      %reversibility
-                      0, ...                          %LB
-                      1000, ...                       %UB
-                      0);                             %c
-printRxnFormula(model,['r_' newID],true,true,true);
 
 end
 

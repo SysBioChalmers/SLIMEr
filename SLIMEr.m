@@ -1,17 +1,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % model = SLIMEr(model,data)
 %
-% Benjamín J. Sánchez. Last update: 2017-11-30
+% Benjamín J. Sánchez. Last update: 2017-12-01
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function model = SLIMEr(model,data)
 
 %Add new metabolites:
 for i = 1:length(data.chainData.metNames)
-    model = addLipidSpecies(model,data.chainData.metNames{i},data.chainData.formulas{i});
+    model = addLipidSpecies(model,data.chainData.metNames{i},data.chainData.formulas{i},false);
 end
-model = addLipidSpecies(model,'lipid - backbones','NA');
-model = addLipidSpecies(model,'lipid - tails','NA');
+model = addLipidSpecies(model,'lipid - backbones','NA',true);
+model = addLipidSpecies(model,'lipid - tails','NA',true);
 
 %Add SLIME reactions:
 for i = 1:length(model.rxns)

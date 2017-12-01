@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % model = changeLipidComp(model,lipidData)
 %
-% Benjamín J. Sánchez. Last update: 2017-11-19
+% Benjamín J. Sánchez. Last update: 2017-12-01
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function model = changeLipidComp(model,lipidData)
@@ -30,18 +30,6 @@ model = addReaction(model, ...                      %model
                     1000, ...                       %UB
                     0);                             %c
 printRxnFormula(model,rxnID,true,true,true);
-
-%Add exchange rxn for backbones:
-newID   = getNewIndex(model.rxns);
-rxnName = 'backbone exchange';
-model   = addReaction(model, ...                      %model
-                      {['r_' newID],rxnName}, ...     %rxn
-                      {metID}, ...                    %metabolites
-                      -1, ...                         %stoichiometry
-                      false, ...                      %reversibility
-                      0, ...                          %LB
-                      1000, ...                       %UB
-                      0);                             %c
 
 end
 
