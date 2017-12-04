@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% compareLipidDistributions
+% createNewModels
 %
-% Benjamín J. Sánchez. Last update: 2017-12-01
+% Benjamín J. Sánchez. Last update: 2017-12-04
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Original model:
@@ -28,13 +28,5 @@ model_correctedComp = SLIMEr(model_original,data,false);
 
 %Model with both lipid and chain length constrained to data:
 model_SLIMEr = SLIMEr(model_original,data,true);
-
-%Simulate models:
-sol_original      = optimizeCbModel(model_original);
-sol_correctedComp = optimizeCbModel(model_correctedComp);
-sol_SLIMEr        = optimizeCbModel(model_SLIMEr);
-
-%Compare distributions:
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
