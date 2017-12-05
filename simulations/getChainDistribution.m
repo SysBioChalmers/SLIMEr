@@ -16,7 +16,7 @@ mu   = sol.x(Xpos);
 %Find chain distribution:
 composition = zeros(length(chains),1);
 for i = 1:length(chains)
-    chainName = [chains{i} ' chain [cytoplasm]'];
+    chainName = ['C' chains{i} ' chain [cytoplasm]'];
     chainPos  = strcmp(model.metNames,chainName);
     rxnPos    = model.S(chainPos,:) < 0;
     rxnStoich = abs(model.S(chainPos,rxnPos));
