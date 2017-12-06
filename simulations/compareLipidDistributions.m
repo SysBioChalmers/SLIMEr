@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % compareLipidDistributions(model_correctedComp,model_SLIMEr)
 %
-% Benjamín J. Sánchez. Last update: 2017-12-05
+% Benjamín J. Sánchez. Last update: 2017-12-06
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function compareLipidDistributions(model_correctedComp,model_SLIMEr)
@@ -10,8 +10,9 @@ function compareLipidDistributions(model_correctedComp,model_SLIMEr)
 cd ../data
 fid = fopen('lipid_data.csv');
 lipidData = textscan(fid,'%s %s %s %f32','Delimiter',',','HeaderLines',1);
-lipids    = lipidData{1};
-data      = lipidData{4};
+lipids    = lipidData{1}([1,3:end]);  %Take out ergosterol
+lipidIDs  = lipidData{3}([1,3:end]);  %Take out ergosterol
+data      = lipidData{4}([1,3:end]);  %Take out ergosterol
 fclose(fid);
 cd ../simulations
 color = [0  1  0];    %Green
