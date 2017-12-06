@@ -10,13 +10,13 @@ function compareLipidDistributions(model_correctedComp,model_SLIMEr)
 cd ../data
 fid = fopen('lipid_data.csv');
 lipidData  = textscan(fid,'%s %s %s %f32','Delimiter',',','HeaderLines',1);
-lipids     = lipidData{1}([1,3:end]);  %Take out ergosterol
-lipidNames = lipidData{2}([1,3:end]);  %Take out ergosterol
-data       = lipidData{4}([1,3:end]);  %Take out ergosterol
+lipids     = lipidData{1}([1,3:end]);       %Take out ergosterol
+lipidNames = lipidData{2}([1,3:end]);       %Take out ergosterol
+data       = lipidData{4}([1,3:end])*1000;  %mg/gDW
 fclose(fid);
 cd ../simulations
 color = [0  1  0];    %Green
-barPlot(data,lipids,'[g/gDW]',color,0.015)
+barPlot(data,lipids,'[mg/gDW]',color,15)
 
 %2. Exp data: chains
 cd ../data
@@ -25,15 +25,17 @@ chainData = textscan(fid,'%s %s %f32','Delimiter',',','HeaderLines',1);
 chains    = chainData{1}(1:end-2);      %Take out very long chain F.A.s
 chains    = strrep(chains,' chain','');
 chains    = strrep(chains,'C','');
-data      = chainData{3}(1:end-2);      %Take out very long chain F.A.s
+data      = chainData{3}(1:end-2)*1000;	%mg/gDW
 fclose(fid);
 cd ../simulations
 color = [1  0  0];    %Red
-barPlot(data,chains,'[g/gDW]',color,0.025)
+barPlot(data,chains,'[mg/gDW]',color,25)
 
 %3. Compare distributions of chains:
 data_old   = getLipidDistribution(model_correctedComp,lipidNames,chains);
+data_old   = data_old*1000;     %mg/gDW
 data_new   = getLipidDistribution(model_SLIMEr,lipidNames,chains);
+data_new   = data_new*1000;     %mg/gDW
 chains_old = sum(data_old)';
 chains_new = sum(data_new)';
 data       = [chains_old/sum(chains_old) chains_new/sum(chains_new)]*100;
@@ -49,7 +51,7 @@ color = [0    1    0
          0.5  0.5  0
          0.8  0.3  0
          1    0    0];
-barPlot(data_new,lipids,'[g/gDW]',color,0.005)
+barPlot(data_new,lipids,'[mg/gDW]',color,5)
 legend(chains,'Location','northwest')
 legend('boxoff')
 
