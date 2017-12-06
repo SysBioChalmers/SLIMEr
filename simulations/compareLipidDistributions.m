@@ -16,7 +16,7 @@ data       = lipidData{4}([1,3:end])*1000;  %mg/gDW
 fclose(fid);
 cd ../simulations
 color = [0  1  0];    %Green
-barPlot(data,lipids,'[mg/gDW]',color,15)
+barPlot(data,lipids,'[mg/gDW]',color,15,600)
 
 %2. Exp data: chains
 cd ../data
@@ -29,7 +29,7 @@ data      = chainData{3}(1:end-2)*1000;	%mg/gDW
 fclose(fid);
 cd ../simulations
 color = [1  0  0];    %Red
-barPlot(data,chains,'[mg/gDW]',color,25)
+barPlot(data,chains,'[mg/gDW]',color,25,500)
 
 %3. Compare distributions of chains:
 data_old   = getLipidDistribution(model_correctedComp,lipidNames,chains);
@@ -41,7 +41,7 @@ chains_new = sum(data_new)';
 data       = [chains_old/sum(chains_old) chains_new/sum(chains_new)]*100;
 color      = [1  1  0      %Yellow
               1  0  0];    %Red
-barPlot(data,chains,'[%]',color,60)
+barPlot(data,chains,'[%]',color,60,900)
 legend('Yeast7 - correct lipid composition','Yeast7 - correct lipid+chain composition','Location','northwest')
 legend('boxoff')
 
@@ -51,7 +51,7 @@ color = [0    1    0
          0.5  0.5  0
          0.8  0.3  0
          1    0    0];
-barPlot(data_new,lipids,'[mg/gDW]',color,5)
+barPlot(data_new,lipids,'[mg/gDW]',color,5,900)
 legend(chains,'Location','northwest')
 legend('boxoff')
 
@@ -59,10 +59,10 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function barPlot(data,names,units,color,ymax)
+function barPlot(data,names,units,color,ymax,xlength)
 
 %Plot data:
-figure('position', [100,100,900,400])
+figure('position', [100,100,xlength,400])
 hold on
 b = bar(data,'BarWidth',1);
 
