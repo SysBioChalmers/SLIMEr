@@ -32,8 +32,10 @@ color = [1  0  0];    %Red
 barPlot(data,chains,'[g/gDW]',color,0.025)
 
 %3. Compare distributions of chains:
-chains_old = getChainDistribution(model_correctedComp,chains);
-chains_new = getChainDistribution(model_SLIMEr,chains);
+data_old   = getLipidDistribution(model_correctedComp,lipidNames,chains);
+data_new   = getLipidDistribution(model_SLIMEr,lipidNames,chains);
+chains_old = sum(data_old)';
+chains_new = sum(data_new)';
 data       = [chains_old/sum(chains_old) chains_new/sum(chains_new)]*100;
 color      = [1  1  0      %Yellow
               1  0  0];    %Red
@@ -42,13 +44,12 @@ legend('Yeast7 - correct lipid composition','Yeast7 - correct lipid+chain compos
 legend('boxoff')
 
 %4. Compare distribution of chains in lipids:
-data  = getLipidDistribution(model_SLIMEr,lipidNames,chains);
 color = [0    1    0
          0.2  0.7  0
          0.5  0.5  0
          0.8  0.3  0
          1    0    0];
-barPlot(data,lipids,'[g/gDW]',color,0.005)
+barPlot(data_new,lipids,'[g/gDW]',color,0.005)
 legend(chains,'Location','northwest')
 legend('boxoff')
 
