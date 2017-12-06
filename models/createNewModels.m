@@ -32,8 +32,10 @@ model_correctedComp = SLIMEr(model_original,data,false);
 
 %Model with both lipid and chain length constrained to data:
 model_SLIMEr = SLIMEr(model_original,data,true);
+save('yeast_7.8_SLIMEr.mat','model_SLIMEr');
 
 %Make abundances be consistent:
 model_SLIMEr = scaleAbundancesInModel(model_SLIMEr);
+delete('yeast_7.8_SLIMEr.mat')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
