@@ -23,7 +23,9 @@ model = model.model_SLIMEr;
 model = adjustModel(model,k);
 
 %Optimize model:
-sol = optimizeCbModel(model);
+cd ../simulations
+sol = simulateGrowth(model);
+cd ../models
 
 %Objective function: unused tails or backbones
 exchange_tails = sol.x(strcmp(model.rxnNames,'lipid - tails exchange'));

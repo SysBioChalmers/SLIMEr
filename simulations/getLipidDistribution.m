@@ -1,13 +1,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % data = getLipidDistribution(model,lipidIDs,chains)
 %
-% Benjamín J. Sánchez. Last update: 2017-12-06
+% Benjamín J. Sánchez. Last update: 2017-12-07
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function composition = getLipidDistribution(model,lipidNames,chains)
 
 %Simulate model:
-sol = optimizeCbModel(model);
+sol = simulateGrowth(model);
 
 %Find growth:
 Xpos = strcmp(model.rxnNames,'growth');
