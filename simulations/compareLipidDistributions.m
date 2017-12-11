@@ -51,7 +51,7 @@ color = [0    1    0
          0.5  0.5  0
          0.8  0.3  0
          1    0    0];
-barPlot(data_new,lipids,'[mg/gDW]',color,5,900)
+barPlot(data_new,lipids,'[mg/gDW]',color,10,900)
 legend(chains,'Location','northwest')
 legend('boxoff')
 

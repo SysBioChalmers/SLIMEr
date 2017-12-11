@@ -89,11 +89,11 @@ end
 function model = adjustModel(model,k)
 
 %Find positions:
-chainRxn  = strcmp(model.rxnNames,'lipid pseudoreaction - tail');
-chainMets = model.S(:,chainRxn) < 0;
+backRxn  = strcmp(model.rxnNames,'lipid pseudoreaction - backbone');
+backMets = model.S(:,backRxn) < 0;
 
 %Chain stoich coeffs:
-model.S(chainMets,chainRxn) = k*model.S(chainMets,chainRxn);
+model.S(backMets,backRxn) = k*model.S(backMets,backRxn);
 
 end
 
