@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % createNewModels
 %
-% Benjamín J. Sánchez. Last update: 2017-12-04
+% Benjamín J. Sánchez. Last update: 2017-12-11
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clear variables
@@ -35,7 +35,8 @@ model_SLIMEr = SLIMEr(model_original,data,true);
 save('yeast_7.8_SLIMEr.mat','model_SLIMEr');
 
 %Make abundances be consistent:
-model_SLIMEr = scaleAbundancesInModel(model_SLIMEr);
+[model_SLIMEr,k]    = scaleAbundancesInModel(model_SLIMEr);
+model_correctedComp = adjustModel(model_correctedComp,k);
 delete('yeast_7.8_SLIMEr.mat')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

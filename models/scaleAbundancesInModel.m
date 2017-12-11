@@ -1,10 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% model = scaleAbundancesInModel(model)
+% [model,k] = scaleAbundancesInModel(model)
 %
 % Benjamín J. Sánchez. Last update: 2017-12-11
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function model = scaleAbundancesInModel(model)
+function [model,k] = scaleAbundancesInModel(model)
 
 %Find optimal scaling factor:
 k0       = 1;
@@ -24,8 +24,9 @@ krange(2) = fminsearch(@(x) -minScaling(x),kOpt);
 disp(['Optimality range: k = [ ' num2str(krange(1)) ' , ' num2str(krange(2)) ' ]'])
 
 %Scale with the maximum of the range:
-model = adjustModel(model,krange(2));
-disp(['Scaled chain data in model: k = ' num2str(krange(2))])
+k     = krange(2);
+model = adjustModel(model,k);
+disp(['Scaled chain data in model: k = ' num2str(k)])
 delete('kOpt.mat')
 
 end
