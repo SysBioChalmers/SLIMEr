@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % compareLipidDistributions(model_correctedComp,model_SLIMEr)
 %
-% Benjamín J. Sánchez. Last update: 2017-12-06
+% Benjamín J. Sánchez. Last update: 2017-12-12
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function compareLipidDistributions(model_correctedComp,model_SLIMEr)
@@ -32,15 +32,15 @@ color = [1  0  0];    %Red
 barPlot(data,chains,'[mg/gDW]',color,25,500)
 
 %3. Compare distributions of chains:
-data_old   = getLipidDistribution(model_correctedComp,lipidNames,chains);
-data_old   = data_old*1000;     %mg/gDW
-data_new   = getLipidDistribution(model_SLIMEr,lipidNames,chains);
-data_new   = data_new*1000;     %mg/gDW
-chains_old = sum(data_old)';
-chains_new = sum(data_new)';
-data       = [chains_old/sum(chains_old) chains_new/sum(chains_new)]*100;
-color      = [1  1  0      %Yellow
-              1  0  0];    %Red
+[comp_old,~]   = getLipidDistribution(model_correctedComp,lipidNames,chains);
+comp_old       = comp_old*1000;     %mg/gDW
+[comp_new,var] = getLipidDistribution(model_SLIMEr,lipidNames,chains);
+comp_new       = comp_new*1000;     %mg/gDW
+chains_old     = sum(comp_old)';
+chains_new     = sum(comp_new)';
+data           = [chains_old/sum(chains_old) chains_new/sum(chains_new)]*100;
+color          = [1  1  0      %Yellow
+                  1  0  0];    %Red
 barPlot(data,chains,'[%]',color,60,900)
 legend('Yeast7 - correct lipid composition','Yeast7 - correct lipid+chain composition','Location','northwest')
 legend('boxoff')
@@ -51,7 +51,7 @@ color = [0    1    0
          0.5  0.5  0
          0.8  0.3  0
          1    0    0];
-barPlot(data_new,lipids,'[mg/gDW]',color,10,900)
+barPlot(comp_new,lipids,'[mg/gDW]',color,10,900)
 legend(chains,'Location','northwest')
 legend('boxoff')
 

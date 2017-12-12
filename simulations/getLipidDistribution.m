@@ -1,17 +1,18 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% data = getLipidDistribution(model,lipidIDs,chains)
+% [composition,variability] = getLipidDistribution(model,lipidNames,chains)
 %
-% Benjamín J. Sánchez. Last update: 2017-12-07
+% Benjamín J. Sánchez. Last update: 2017-12-12
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function composition = getLipidDistribution(model,lipidNames,chains)
+function [composition,variability] = getLipidDistribution(model,lipidNames,chains)
 
 %Simulate model:
 sol = simulateGrowth(model);
 
 %Find growth:
-Xpos = strcmp(model.rxnNames,'growth');
-mu   = sol.x(Xpos);
+posG = strcmp(model.rxnNames,'D-glucose exchange');
+posX = strcmp(model.rxnNames,'growth');
+mu   = sol.x(posX);
 
 for i = 1:length(chains)
     chains{i} = ['C' chains{i} ' chain [cytoplasm]'];
@@ -43,6 +44,20 @@ for i = 1:length(SLIMEpos)
         if sum(chainPos) > 0
             composition(pos_i,j) = composition(pos_i,j) + flux*metStoich(chainPos)/mu;
         end
+    end
+end
+
+%Fix glucose and biomass:
+model = changeRxnBounds(model,model.rxns(posG),-1.001,'l');
+model = changeRxnBounds(model,model.rxns(posX),mu,'l');
+
+%Find variability:
+variability = cell(size(composition));
+for i = 1:length(lipidNames)
+    for j = 1:length(chains)
+        [minVal,maxVal] = lipidFVA(model,lipidNames{i},chains{j});
+        variability{i,j} = [minVal,maxVal]/mu;
+        disp(['Computing composition and variability: ' lipidNames{i} ' - ' chains{j}])
     end
 end
 
