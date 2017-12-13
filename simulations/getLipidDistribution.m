@@ -63,8 +63,9 @@ for i = 1:length(lipidNames)
     end
 end
 
-data.comp = composition;
-data.var  = variability;
+data.comp    = composition*1000;        %mg/gDW
+data.var.min = variability.min*1000;    %mg/gDW
+data.var.max = variability.max*1000;    %mg/gDW
 
 end
 
