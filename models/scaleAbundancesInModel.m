@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % [model,k] = scaleAbundancesInModel(model)
 %
-% Benjamín J. Sánchez. Last update: 2017-12-11
+% Benjamín J. Sánchez. Last update: 2017-12-13
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [model,k] = scaleAbundancesInModel(model)
@@ -9,7 +9,7 @@ function [model,k] = scaleAbundancesInModel(model)
 %Find optimal scaling factor:
 k0       = 1;
 kOpt     = fminsearch(@unusedLipid,k0);
-modelOpt = adjustModel(model,kOpt);
+modelOpt = adjustModel(model,kOpt,true);
 
 %Optimize model:
 cd ../simulations
@@ -25,7 +25,7 @@ disp(['Optimality range: k = [ ' num2str(krange(1)) ' , ' num2str(krange(2)) ' ]
 
 %Scale with the maximum of the range:
 k     = krange(2);
-model = adjustModel(model,k);
+model = adjustModel(model,k,true);
 disp(['Scaled chain data in model: k = ' num2str(k)])
 delete('kOpt.mat')
 
@@ -38,7 +38,7 @@ function exchange = unusedLipid(k)
 %Load model and adjust stoich coeffs of the tail pseudo-rxn:
 model = load('yeast_7.8_SLIMEr.mat');
 model = model.model_SLIMEr;
-model = adjustModel(model,k);
+model = adjustModel(model,k,false);
 
 %Optimize model:
 cd ../simulations
@@ -61,13 +61,7 @@ function k = minScaling(k)
 %Load model and adjust stoich coeffs of the tail pseudo-rxn:
 model = load('yeast_7.8_SLIMEr.mat');
 model = model.model_SLIMEr;
-model = adjustModel(model,k);
-
-%block exchange of tails and backbones:
-posT = strcmp(model.rxnNames,'lipid - tails exchange');
-posB = strcmp(model.rxnNames,'lipid - backbones exchange');
-model = changeRxnBounds(model,model.rxns(posT),0,'b');
-model = changeRxnBounds(model,model.rxns(posB),0,'b');
+model = adjustModel(model,k,true);
 
 %Optimize model:
 cd ../simulations
