@@ -52,17 +52,19 @@ model = changeRxnBounds(model,model.rxns(posG),-1.001,'l');
 model = changeRxnBounds(model,model.rxns(posX),mu,'l');
 
 %Find variability:
-variability = cell(size(composition));
+variability.min = zeros(size(composition));
+variability.max = zeros(size(composition));
 for i = 1:length(lipidNames)
     for j = 1:length(chains)
-        [minVal,maxVal] = lipidFVA(model,lipidNames{i},chains{j});
-        variability{i,j} = [minVal,maxVal]/mu;
+        [minVal,maxVal]      = lipidFVA(model,lipidNames{i},chains{j});
+        variability.min(i,j) = minVal/mu;
+        variability.max(i,j) = maxVal/mu;
         disp(['Computing composition and variability: ' lipidNames{i} ' - ' chains{j}])
     end
 end
 
-data.composition = composition;
-data.variability = variability;
+data.comp = composition;
+data.var  = variability;
 
 end
 
