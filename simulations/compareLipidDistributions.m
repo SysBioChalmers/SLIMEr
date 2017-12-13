@@ -1,10 +1,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% compareLipidDistributions(model_correctedComp,model_SLIMEr)
+% compareLipidDistributions
 %
-% Benjamín J. Sánchez. Last update: 2017-12-12
+% Benjamín J. Sánchez. Last update: 2017-12-13
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-function compareLipidDistributions(model_correctedComp,model_SLIMEr)
 
 %1. Exp data: lipid classes
 cd ../data
@@ -54,34 +52,5 @@ color = [0    1    0
 barPlot(comp_new,lipids,'[mg/gDW]',color,10,900)
 legend(chains,'Location','northwest')
 legend('boxoff')
-
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-function barPlot(data,names,units,color,ymax,xlength)
-
-%Plot data:
-figure('position', [100,100,xlength,400])
-hold on
-b = bar(data,'BarWidth',1);
-
-for i = 1:length(b)
-    set(b(i),'FaceColor',color(i,:));
-end
-
-%Various options:
-text_size = 12;
-set(gca,'XTick',1:length(names),'XTickLabel',names)
-set(gca,'FontSize',text_size)
-ylabel(['Abundance ' units],'FontSize',text_size);
-ylim([0 ymax])
-set(gca,'FontSize',text_size)
-set(gca,'XColor','k')
-set(gca,'YColor','k')
-box on
-hold off
-
-end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
