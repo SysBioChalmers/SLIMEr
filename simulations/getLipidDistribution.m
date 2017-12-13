@@ -1,10 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% [composition,variability] = getLipidDistribution(model,lipidNames,chains)
+% data = getLipidDistribution(model,lipidNames,chains)
 %
-% Benjamín J. Sánchez. Last update: 2017-12-12
+% Benjamín J. Sánchez. Last update: 2017-12-13
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [composition,variability] = getLipidDistribution(model,lipidNames,chains)
+function data = getLipidDistribution(model,lipidNames,chains)
 
 %Simulate model:
 sol = simulateGrowth(model);
@@ -60,6 +60,9 @@ for i = 1:length(lipidNames)
         disp(['Computing composition and variability: ' lipidNames{i} ' - ' chains{j}])
     end
 end
+
+data.composition = composition;
+data.variability = variability;
 
 end
 

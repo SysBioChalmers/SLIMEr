@@ -6,6 +6,10 @@
 
 function barPlot(data,names,units,color,ymax,xlength)
 
+if isfield(data,'var')
+    data = data.comp;
+end
+
 %Plot data:
 figure('position', [100,100,xlength,400])
 hold on
