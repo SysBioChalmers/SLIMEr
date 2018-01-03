@@ -23,8 +23,8 @@ krange(1) = fminsearch(@(x) +minScaling(x),kOpt);
 krange(2) = fminsearch(@(x) -minScaling(x),kOpt);
 disp(['Optimality range: k = [ ' num2str(krange(1)) ' , ' num2str(krange(2)) ' ]'])
 
-%Scale with the maximum of the range:
-k     = krange(1);
+%Scale with the average of the range:
+k     = mean(krange);
 model = adjustModel(model,k,true);
 disp(['Scaled lipid data in model: k = ' num2str(k)])
 delete('kOpt.mat')
