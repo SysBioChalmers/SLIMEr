@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % [model,k] = scaleAbundancesInModel(model)
 %
-% Benjamín J. Sánchez. Last update: 2017-12-13
+% Benjamín J. Sánchez. Last update: 2018-01-03
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [model,k] = scaleAbundancesInModel(model)
@@ -24,9 +24,9 @@ krange(2) = fminsearch(@(x) -minScaling(x),kOpt);
 disp(['Optimality range: k = [ ' num2str(krange(1)) ' , ' num2str(krange(2)) ' ]'])
 
 %Scale with the maximum of the range:
-k     = krange(2);
+k     = krange(1);
 model = adjustModel(model,k,true);
-disp(['Scaled chain data in model: k = ' num2str(k)])
+disp(['Scaled lipid data in model: k = ' num2str(k)])
 delete('kOpt.mat')
 
 end
