@@ -14,6 +14,9 @@ posG = strcmp(model.rxnNames,'D-glucose exchange');
 posX = strcmp(model.rxnNames,'growth');
 mu   = sol.x(posX);
 
+%Find energy requirements:
+[ATP,NADH,NADPH] = getEnergyexpenditure(model,sol.x/mu);
+
 for i = 1:length(chains)
     chains{i} = ['C' chains{i} ' chain [cytoplasm]'];
 end
@@ -66,6 +69,10 @@ end
 data.comp    = composition*1000;        %mg/gDW
 data.var.min = variability.min*1000;    %mg/gDW
 data.var.max = variability.max*1000;    %mg/gDW
+data.mu      = mu;
+data.ATP     = ATP;
+data.NADH    = NADH;
+data.NADPH   = NADPH;
 
 end
 
