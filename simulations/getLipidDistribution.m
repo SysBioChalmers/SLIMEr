@@ -51,8 +51,8 @@ for i = 1:length(SLIMEpos)
 end
 
 %Fix glucose and biomass:
-model = changeRxnBounds(model,model.rxns(posG),-1.001,'l');
-model = changeRxnBounds(model,model.rxns(posX),mu,'l');
+model = changeRxnBounds(model,model.rxns(posG),-1,'b');
+model = changeRxnBounds(model,model.rxns(posX),mu*0.999,'l');
 
 %Find variability:
 variability.min = zeros(size(composition));
