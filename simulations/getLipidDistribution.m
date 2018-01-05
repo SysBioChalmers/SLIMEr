@@ -7,15 +7,15 @@
 function data = getLipidDistribution(model,lipidNames,chains)
 
 %Simulate model:
-sol = simulateGrowth(model,'growth');
+posX = strcmp(model.rxnNames,'growth');
+sol  = simulateGrowth(model,model.rxns{posX},'b');
 
 %Find growth:
 posG = strcmp(model.rxnNames,'D-glucose exchange');
-posX = strcmp(model.rxnNames,'growth');
 mu   = sol.x(posX);
 
 %Find energy requirements:
-[ATP,NADH,NADPH] = getEnergyexpenditure(model,sol.x/mu);
+[ATP,NADH,NADPH,netATP] = getEnergyexpenditure(model,sol.x/mu);
 
 for i = 1:length(chains)
     chains{i} = ['C' chains{i} ' chain [cytoplasm]'];
@@ -73,6 +73,7 @@ data.mu      = mu;
 data.ATP     = ATP;
 data.NADH    = NADH;
 data.NADPH   = NADPH;
+data.netATP  = netATP;
 
 end
 
