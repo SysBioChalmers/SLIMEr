@@ -1,13 +1,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % data = getLipidDistribution(model,lipidNames,chains)
 %
-% Benjamín J. Sánchez. Last update: 2018-01-04
+% Benjamín J. Sánchez. Last update: 2018-01-05
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function data = getLipidDistribution(model,lipidNames,chains)
 
 %Simulate model:
-sol = simulateGrowth(model);
+sol = simulateGrowth(model,'growth');
 
 %Find growth:
 posG = strcmp(model.rxnNames,'D-glucose exchange');
