@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % sol = simulateGrowth(model)
 %
-% Benjamín J. Sánchez. Last update: 2017-12-07
+% Benjamín J. Sánchez. Last update: 2018-01-04
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function sol = simulateGrowth(model)

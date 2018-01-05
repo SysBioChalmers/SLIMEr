@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % data = getLipidDistribution(model,lipidNames,chains)
 %
-% Benjamín J. Sánchez. Last update: 2017-12-13
+% Benjamín J. Sánchez. Last update: 2018-01-04
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function data = getLipidDistribution(model,lipidNames,chains)
