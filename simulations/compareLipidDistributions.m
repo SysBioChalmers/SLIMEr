@@ -66,4 +66,12 @@ b = barPlot(new,lipids,'[mg/gDW]',color,20,900);
 legend(b,chains,'Location','northwest')
 legend('boxoff')
 
+%Compare energy differences:
+netATP  = num2str(round(new.netATP - old.netATP,2));
+ATPpos  = strcmp(model_correctedComp.mets,'s_0434[c]');
+Xpos    = strcmp(model_correctedComp.rxns,'r_4041');
+GAM     = abs(model_correctedComp.S(ATPpos,Xpos));
+percATP = num2str(round((new.netATP - old.netATP)/GAM*100,1));
+disp(['net ATP spent in changing lipid comp: ' netATP ' mmol/gDW = ' percATP '% of GAM'])
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -69,11 +69,11 @@ end
 data.comp    = composition*1000;        %mg/gDW
 data.var.min = variability.min*1000;    %mg/gDW
 data.var.max = variability.max*1000;    %mg/gDW
-data.mu      = mu;
-data.ATP     = ATP;
-data.NADH    = NADH;
-data.NADPH   = NADPH;
-data.netATP  = netATP;
+data.mu      = mu;                      %1/h
+data.ATP     = ATP;                     %mmol/gDW
+data.NADH    = NADH;                    %mmol/gDW
+data.NADPH   = NADPH;                   %mmol/gDW
+data.netATP  = netATP;                  %mmol/gDW
 
 end
 
