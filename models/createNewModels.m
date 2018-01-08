@@ -51,4 +51,5 @@ delete('yeast_7.8_SLIMEr.mat')
 %Correct the rest of the composition to be consistent:
 model_correctedComp = changeOtherComp(model_correctedComp,data.otherData);
 model_SLIMEr        = changeOtherComp(model_SLIMEr,data.otherData);
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

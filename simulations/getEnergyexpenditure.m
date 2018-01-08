@@ -79,6 +79,7 @@ end
 
 sol_post = simulateGrowth(model,model.rxns(posNGAM),'l');
 ratio    = sol_pre.f - sol_post.f;
+
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
