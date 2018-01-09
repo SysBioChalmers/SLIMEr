@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % [model,k] = scaleAbundancesInModel(model)
 %
-% Benjamín J. Sánchez. Last update: 2018-01-05
+% Benjamín J. Sánchez. Last update: 2018-01-09
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [model,k] = scaleAbundancesInModel(model)
@@ -12,11 +12,9 @@ kOpt     = fminsearch(@unusedLipid,k0);
 modelOpt = adjustModel(model,kOpt,true);
 
 %Optimize model:
-cd ../simulations
 posX   = strcmp(model.rxnNames,'growth'); 
 solOpt = simulateGrowth(modelOpt,model.rxns{posX},'b');
 muOpt  = solOpt.f;
-cd ../models
 save('kOpt.mat','kOpt','muOpt')
 
 %Find optimality range:
@@ -42,10 +40,8 @@ model = model.model_SLIMEr;
 model = adjustModel(model,k,false);
 
 %Optimize model:
-cd ../simulations
 posX = strcmp(model.rxnNames,'growth'); 
 sol  = simulateGrowth(model,model.rxns{posX},'b');
-cd ../models
 
 %Objective function: unused tails or backbones
 exchange_tails = sol.x(strcmp(model.rxnNames,'lipid - tails exchange'));
@@ -66,10 +62,8 @@ model = model.model_SLIMEr;
 model = adjustModel(model,k,true);
 
 %Optimize model:
-cd ../simulations
 posX = strcmp(model.rxnNames,'growth'); 
 sol  = simulateGrowth(model,model.rxns{posX},'b');
-cd ../models
 
 disp(['Finding scaling range: k = ' num2str(k) ' -> mu = ' num2str(sol.f)])
 
