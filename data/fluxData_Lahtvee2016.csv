@@ -1,0 +1,9 @@
+name,ID in model,mmol/gDWh,stdev
+glucose,r_1714,-1.0709,0.0073
+glycerol,r_1808,0.0009,0.0010
+acetate,r_1634,0.0000,0.0000
+ethanol,r_1761,0.0000,0.0000
+pyruvate,r_2033,0.0000,0.0001
+succinate,r_2056,0.0000,0.0000
+O2,r_1992,-2.4465,0.0761
+CO2,r_1672,2.6276,0.0312

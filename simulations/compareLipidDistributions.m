@@ -5,7 +5,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %1. Exp data: lipid classes
-fid = fopen('../data/lipid_data.csv');
+fid = fopen('../data/lipidData_Lahtvee2016.csv');
 lipidData  = textscan(fid,'%s %s %s %f32','Delimiter',',','HeaderLines',1);
 lipids     = lipidData{1}([1,3:end]);       %Take out ergosterol
 lipidNames = lipidData{2}([1,3:end]);       %Take out ergosterol
@@ -15,7 +15,7 @@ color = [0  1  0];    %Green
 barPlot(data,lipids,'[mg/gDW]',color,15,600);
 
 %2. Exp data: chains
-fid = fopen('../data/chain_data.csv');
+fid = fopen('../data/chainData_Lahtvee2016.csv');
 chainData = textscan(fid,'%s %s %f32','Delimiter',',','HeaderLines',1);
 chains    = chainData{1}(1:end-2);      %Take out very long chain F.A.s
 chains    = strrep(chains,' chain','');
@@ -66,7 +66,7 @@ legend('boxoff')
 netATP  = num2str(round(new.netATP - old.netATP,2));
 ATPpos  = strcmp(model_correctedComp.mets,'s_0434[c]');
 Xpos    = strcmp(model_correctedComp.rxns,'r_4041');
-GAM     = abs(model_correctedComp.S(ATPpos,Xpos));
+GAM     = 35.36;    %mmol/gDW (Förster et al. 2003 without counting polimerization costs)
 percATP = num2str(round((new.netATP - old.netATP)/GAM*100,1));
 disp(['net ATP spent in changing lipid comp: ' netATP ' mmol/gDW = ' percATP '% of GAM'])
 

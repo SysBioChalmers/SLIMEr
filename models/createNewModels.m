@@ -12,14 +12,14 @@ model_original = load('yeast_7.8.mat');
 model_original = model_original.model;
 
 %Lipid data:
-fid = fopen('../data/lipid_data.csv');
+fid = fopen('../data/lipidData_Lahtvee2016.csv');
 lipidData = textscan(fid,'%s %s %s %f32','Delimiter',',','HeaderLines',1);
 data.lipidData.metIDs    = lipidData{3};
 data.lipidData.abundance = lipidData{4};
 fclose(fid);
 
 %Chain data:
-fid = fopen('../data/chain_data.csv');
+fid = fopen('../data/chainData_Lahtvee2016.csv');
 chainData = textscan(fid,'%s %s %f32','Delimiter',',','HeaderLines',1);
 data.chainData.metNames  = chainData{1};
 data.chainData.formulas  = chainData{2};
@@ -27,7 +27,7 @@ data.chainData.abundance = chainData{3};
 fclose(fid);
 
 %Other composition data:
-fid = fopen('../data/other_data.csv');
+fid = fopen('../data/compData_Lahtvee2016.csv');
 otherData = textscan(fid,'%s %s %f32','Delimiter',',','HeaderLines',1);
 data.otherData.metIDs    = otherData{2};
 data.otherData.abundance = otherData{3};
