@@ -1,17 +1,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% data = getLipidDistribution(model,lipidNames,chains)
+% data = getLipidDistribution(model,lipidNames,chains,fluxData)
 %
-% Benjamín J. Sánchez. Last update: 2018-01-05
+% Benjamín J. Sánchez. Last update: 2018-01-10
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function data = getLipidDistribution(model,lipidNames,chains)
+function data = getLipidDistribution(model,lipidNames,chains,fluxData)
 
 %Simulate model:
-posX = strcmp(model.rxnNames,'growth');
-sol  = simulateGrowth(model,model.rxns{posX},'b');
+[sol,model] = simulateGrowth(model,fluxData);
 
 %Find growth:
-posG = strcmp(model.rxnNames,'D-glucose exchange');
+posX = strcmp(model.rxnNames,'growth');
 mu   = sol.x(posX);
 
 %Find energy requirements:
@@ -50,9 +49,8 @@ for i = 1:length(SLIMEpos)
     end
 end
 
-%Fix glucose and biomass:
-model = changeRxnBounds(model,model.rxns(posG),-1,'b');
-model = changeRxnBounds(model,model.rxns(posX),mu*0.999,'l');
+%Fix flux exchanges:
+
 
 %Find variability:
 variability.min = zeros(size(composition));

@@ -1,21 +1,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% [model,k] = scaleAbundancesInModel(model)
+% [model,k] = scaleAbundancesInModel(model,data)
 %
-% Benjamín J. Sánchez. Last update: 2018-01-09
+% Benjamín J. Sánchez. Last update: 2018-01-10
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [model,k] = scaleAbundancesInModel(model)
+function [model,k] = scaleAbundancesInModel(model,data)
 
 %Find optimal scaling factor:
-k0       = 1;
-kOpt     = fminsearch(@unusedLipid,k0);
-modelOpt = adjustModel(model,kOpt,true);
-
-%Optimize model:
-posX   = strcmp(model.rxnNames,'growth'); 
-solOpt = simulateGrowth(modelOpt,model.rxns{posX},'b');
-muOpt  = solOpt.f;
-save('kOpt.mat','kOpt','muOpt')
+save('temp.mat','model','data')
+k0   = 1;
+kOpt = fminsearch(@unusedLipid,k0);
+save('temp.mat','model','data','kOpt')
 
 %Find optimality range:
 krange(1) = fminsearch(@(x) +minScaling(x),kOpt);
@@ -26,7 +21,7 @@ disp(['Optimality range: k = [ ' num2str(krange(1)) ' , ' num2str(krange(2)) ' ]
 k     = mean(krange);
 model = adjustModel(model,k,true);
 disp(['Scaled lipid data in model: k = ' num2str(k)])
-delete('kOpt.mat')
+delete('temp.mat')
 
 end
 
@@ -35,13 +30,13 @@ end
 function exchange = unusedLipid(k)
 
 %Load model and adjust stoich coeffs of the tail pseudo-rxn:
-model = load('yeast_7.8_SLIMEr.mat');
-model = model.model_SLIMEr;
+temp  = load('temp.mat');
+model = temp.model;
 model = adjustModel(model,k,false);
 
 %Optimize model:
-posX = strcmp(model.rxnNames,'growth'); 
-sol  = simulateGrowth(model,model.rxns{posX},'b');
+data    = temp.data;
+[sol,~] = simulateGrowth(model,data.fluxData);
 
 %Objective function: unused tails or backbones
 exchange_tails = sol.x(strcmp(model.rxnNames,'lipid - tails exchange'));
@@ -57,21 +52,19 @@ end
 function k = minScaling(k)
 
 %Load model and adjust stoich coeffs of the tail pseudo-rxn:
-model = load('yeast_7.8_SLIMEr.mat');
-model = model.model_SLIMEr;
+temp  = load('temp.mat');
+model = temp.model;
 model = adjustModel(model,k,true);
 
 %Optimize model:
-posX = strcmp(model.rxnNames,'growth'); 
-sol  = simulateGrowth(model,model.rxns{posX},'b');
+data    = temp.data;
+[sol,~] = simulateGrowth(model,data.fluxData);
 
 disp(['Finding scaling range: k = ' num2str(k) ' -> mu = ' num2str(sol.f)])
 
-%Any simulation that results in impaired growth (>1%) returns the original value:
-kOpt  = load('kOpt.mat');
-muOpt = kOpt.muOpt;
-if abs(sol.f - muOpt)/muOpt > 0.01
-    k = kOpt.kOpt;
+%Any unfeasible simulation returns the original value:
+if isempty(sol.f)
+    k = temp.kOpt;
 end
 
 end

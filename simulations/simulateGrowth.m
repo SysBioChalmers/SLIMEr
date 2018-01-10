@@ -1,24 +1,32 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% sol = simulateGrowth(model,objRxn,glucOpt)
+% [sol,model] = simulateGrowth(model,fluxData)
 %
-% Benjamín J. Sánchez. Last update: 2018-01-05
+% Benjamín J. Sánchez. Last update: 2018-01-10
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function sol = simulateGrowth(model,objRxn,glucOpt)
+function [sol,model] = simulateGrowth(model,fluxData)
 
-posG = strcmp(model.rxns,'1714');       %D-glucose exchange
-posR = strcmp(model.rxns,objRxn);       %Objective rxn
+%Constrain all fluxes with exp. data
+for i = 1:length(fluxData.rxnIDs)
+    stdev = min([fluxData.stdevs(i),abs(fluxData.averages(i))/1.96]);
+    LB    = fluxData.averages(i) - 1.96*stdev;      %C.I. of 95%
+    UB    = fluxData.averages(i) + 1.96*stdev;      %C.I. of 95%
+    model = changeRxnBounds(model,fluxData.rxnIDs(i),LB,'l');
+    model = changeRxnBounds(model,fluxData.rxnIDs(i),UB,'u');
+end
 
-%Simulation 1: Limit glucose, maximize growth
-model = changeRxnBounds(model,model.rxns(posG),-1,glucOpt);
-model = changeRxnBounds(model,model.rxns(posR),0,'l');
-model = changeRxnBounds(model,model.rxns(posR),+1000,'u');
-model = changeObjective(model,model.rxns(posR),+1);
+posNGAM = strcmp(model.rxnNames,'non-growth associated maintenance reaction');  %Objective rxn
+
+%Simulation 1: Maximize objective function
+model = changeRxnBounds(model,model.rxns(posNGAM),0,'l');
+model = changeRxnBounds(model,model.rxns(posNGAM),+1000,'u');
+model = changeObjective(model,model.rxns(posNGAM),+1);
 sol   = optimizeCbModel(model);
 
-%Simulation 2: Force growth, minimize sum(abs(fluxes))
-obj   = sol.x(posR);
-model = changeRxnBounds(model,model.rxns(posR),obj*0.999,'l');
+%Simulation 2: Force previous objective function, minimize sum(abs(fluxes))
+obj   = sol.x(posNGAM);
+model = changeRxnBounds(model,model.rxns(posNGAM),obj*0.999,'l');
+model = changeRxnBounds(model,model.rxns(posNGAM),obj*1.001,'u');
 sol   = optimizeCbModel(model,'min','one');
 
 end

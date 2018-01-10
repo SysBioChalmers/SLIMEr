@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % [minVal,maxVal] = lipidFVA(model,lipidName,chainName)
 %
-% Benjamín J. Sánchez. Last update: 2017-12-12
+% Benjamín J. Sánchez. Last update: 2018-01-10
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [minVal,maxVal] = lipidFVA(model,lipidName,chainName)

@@ -33,17 +33,23 @@ data.otherData.metIDs    = otherData{2};
 data.otherData.abundance = otherData{3};
 fclose(fid);
 
+%Flux data:
+fid = fopen('../data/fluxData_Lahtvee2016.csv');
+fluxData = textscan(fid,'%s %s %f32 %f32','Delimiter',',','HeaderLines',1);
+data.fluxData.rxnIDs   = fluxData{2};
+data.fluxData.averages = fluxData{3};
+data.fluxData.stdevs   = fluxData{4};
+fclose(fid);
+
 %Model with lipid composition corrected:
 model_correctedComp = SLIMEr(model_original,data,false);
 
 %Model with both lipid and chain length constrained to data:
 model_SLIMEr = SLIMEr(model_original,data,true);
-save('yeast_7.8_SLIMEr.mat','model_SLIMEr');
 
 %Make abundances be consistent:
-[model_SLIMEr,k]    = scaleAbundancesInModel(model_SLIMEr);
+[model_SLIMEr,k]    = scaleAbundancesInModel(model_SLIMEr,data);
 model_correctedComp = adjustModel(model_correctedComp,k,false);
-delete('yeast_7.8_SLIMEr.mat')
 
 %Correct the rest of the composition to be consistent:
 model_correctedComp = changeOtherComp(model_correctedComp,data.otherData);

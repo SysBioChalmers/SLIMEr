@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % compareLipidDistributions
 %
-% Benjamín J. Sánchez. Last update: 2018-01-09
+% Benjamín J. Sánchez. Last update: 2018-01-10
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %1. Exp data: lipid classes
@@ -25,9 +25,17 @@ fclose(fid);
 color = [1  0  0];    %Red
 barPlot(data,chains,'[mg/gDW]',color,25,500);
 
+%Flux data:
+fid  = fopen('../data/fluxData_Lahtvee2016.csv');
+data = textscan(fid,'%s %s %f32 %f32','Delimiter',',','HeaderLines',1);
+fluxData.rxnIDs   = data{2};
+fluxData.averages = data{3};
+fluxData.stdevs   = data{4};
+fclose(fid);
+
 %3. Compare distributions of chains:
-old       = getLipidDistribution(model_correctedComp,lipidNames,chains);
-new       = getLipidDistribution(model_SLIMEr,lipidNames,chains);
+old       = getLipidDistribution(model_correctedComp,lipidNames,chains,fluxData);
+new       = getLipidDistribution(model_SLIMEr,lipidNames,chains,fluxData);
 oldChains = sum(old.comp)';
 newChains = sum(new.comp)';
 data      = [oldChains/sum(oldChains) newChains/sum(newChains)]*100;
