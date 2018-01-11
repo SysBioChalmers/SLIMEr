@@ -1,10 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% [ATP,NADH,NADPH,netATP] = getEnergyexpenditure(model,flux)
+% [ATP,NADH,NADPH,netATP] = getEnergyexpenditure(model,yields)
 %
-% Benjamín J. Sánchez. Last update: 2018-01-05
+% Benjamín J. Sánchez. Last update: 2018-01-11
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [ATP,NADH,NADPH,netATP] = getEnergyexpenditure(model,flux)
+function [ATP,NADH,NADPH,netATP] = getEnergyexpenditure(model,yields)
 
 %Get metabolites from all possible compartments:
 ATPmets   = getMetFromAllComps(model,'ATP');
@@ -16,7 +16,7 @@ ATP   = 0;
 NADH  = 0;
 NADPH = 0;
 for i = 1:length(model.rxns)
-    netProduction = flux(i)*model.S(:,i);
+    netProduction = yields(i)*model.S(:,i);
     ATP   = ATP   + getConsumption(netProduction,ATPmets);
     NADH  = NADH  + getConsumption(netProduction,NADHmets);
     NADPH = NADPH + getConsumption(netProduction,NADPHmets);
@@ -61,8 +61,10 @@ end
 function ratio = getRatio(model,met)
 
 %Produce a 100% respiring model:
-posNGAM = strcmp(model.rxnNames,'non-growth associated maintenance reaction');
-sol_pre = simulateGrowth(model,model.rxns(posNGAM),'l');
+fluxData.rxnIDs   = {'r_1714'};    %Only glucose uptake constrained
+fluxData.averages = -1;
+fluxData.stdevs   = 0;           %No standard deviation
+[sol_pre,~]       = simulateGrowth(model,fluxData);
 
 %Force 1 mmol/gDWh of the met to go to waste:
 if strcmp(met,'NADH')
@@ -77,8 +79,8 @@ elseif strcmp(met,'NADPH')
     %                                            stoich    rev   LB UB c
 end
 
-sol_post = simulateGrowth(model,model.rxns(posNGAM),'l');
-ratio    = sol_pre.f - sol_post.f;
+[sol_post,~] = simulateGrowth(model,fluxData);
+ratio        = sol_pre.f - sol_post.f;
 
 end
 

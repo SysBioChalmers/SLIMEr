@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % compareLipidDistributions
 %
-% Benjamín J. Sánchez. Last update: 2018-01-10
+% Benjamín J. Sánchez. Last update: 2018-01-11
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Read data and modify for plotting:
@@ -25,14 +25,14 @@ color     = [1  0  0];                              %Red
 barPlot(abundance,chains,'[mg/gDW]',color,25,500);
 
 %3. Compare distributions of chains:
-old       = getLipidDistribution(model_correctedComp,lipidNames,chains,data.fluxData);
-new       = getLipidDistribution(model_SLIMEr,lipidNames,chains,data.fluxData);
-oldChains = sum(old.comp)';
-newChains = sum(new.comp)';
-data      = [oldChains/sum(oldChains) newChains/sum(newChains)]*100;
-color     = [1  1  0      %Yellow
-             1  0  0];    %Red
-barPlot(data,chains,'[%]',color,60,900);
+old        = getLipidDistribution(model_correctedComp,lipidNames,chains,data.fluxData);
+new        = getLipidDistribution(model_SLIMEr,lipidNames,chains,data.fluxData);
+oldChains  = sum(old.comp)';
+newChains  = sum(new.comp)';
+abundances = [oldChains/sum(oldChains) newChains/sum(newChains)]*100;
+color      = [1  1  0      %Yellow
+              1  0  0];    %Red
+barPlot(abundances,chains,'[%]',color,60,900);
 legend('Yeast7 - correct lipid composition','Yeast7 - correct lipid+chain composition','Location','northwest')
 legend('boxoff')
 

@@ -1,13 +1,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % data = getLipidDistribution(model,lipidNames,chains,fluxData)
 %
-% Benjamín J. Sánchez. Last update: 2018-01-10
+% Benjamín J. Sánchez. Last update: 2018-01-11
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function data = getLipidDistribution(model,lipidNames,chains,fluxData)
 
 %Simulate model:
-[sol,model] = simulateGrowth(model,fluxData);
+[sol,model_cons] = simulateGrowth(model,fluxData);
 
 %Find growth:
 posX = strcmp(model.rxnNames,'growth');
@@ -49,15 +49,12 @@ for i = 1:length(SLIMEpos)
     end
 end
 
-%Fix flux exchanges:
-
-
 %Find variability:
 variability.min = zeros(size(composition));
 variability.max = zeros(size(composition));
 for i = 1:length(lipidNames)
     for j = 1:length(chains)
-        [minVal,maxVal]      = lipidFVA(model,lipidNames{i},chains{j});
+        [minVal,maxVal]      = lipidFVA(model_cons,lipidNames{i},chains{j});
         variability.min(i,j) = minVal/mu;
         variability.max(i,j) = maxVal/mu;
         disp(['Computing composition and variability: ' lipidNames{i} ' - ' chains{j}])
