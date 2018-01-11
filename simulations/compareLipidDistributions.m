@@ -4,38 +4,29 @@
 % Benjamín J. Sánchez. Last update: 2018-01-10
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%Read data and modify for plotting:
+addpath('../data')
+data = readData;
+rmpath('../data')
+
 %1. Exp data: lipid classes
-fid = fopen('../data/lipidData_Lahtvee2016.csv');
-lipidData  = textscan(fid,'%s %s %s %f32','Delimiter',',','HeaderLines',1);
-lipids     = lipidData{1}([1,3:end]);       %Take out ergosterol
-lipidNames = lipidData{2}([1,3:end]);       %Take out ergosterol
-data       = lipidData{4}([1,3:end])*1000;  %mg/gDW
-fclose(fid);
-color = [0  1  0];    %Green
-barPlot(data,lipids,'[mg/gDW]',color,15,600);
+lipids     = data.lipidData.metAbbrev([1,3:end]);       %Take out ergosterol
+lipidNames = data.lipidData.metNames([1,3:end]);        %Take out ergosterol
+abundance  = data.lipidData.abundance([1,3:end])*1000;  %mg/gDW
+color      = [0  1  0];                                 %Green
+barPlot(abundance,lipids,'[mg/gDW]',color,15,600);
 
 %2. Exp data: chains
-fid = fopen('../data/chainData_Lahtvee2016.csv');
-chainData = textscan(fid,'%s %s %f32','Delimiter',',','HeaderLines',1);
-chains    = chainData{1}(1:end-2);      %Take out very long chain F.A.s
+chains    = data.chainData.metNames(1:end-2);       %Take out very long chain F.A.s
 chains    = strrep(chains,' chain','');
 chains    = strrep(chains,'C','');
-data      = chainData{3}(1:end-2)*1000;	%mg/gDW
-fclose(fid);
-color = [1  0  0];    %Red
-barPlot(data,chains,'[mg/gDW]',color,25,500);
-
-%Flux data:
-fid  = fopen('../data/fluxData_Lahtvee2016.csv');
-data = textscan(fid,'%s %s %f32 %f32','Delimiter',',','HeaderLines',1);
-fluxData.rxnIDs   = data{2};
-fluxData.averages = data{3};
-fluxData.stdevs   = data{4};
-fclose(fid);
+abundance = data.chainData.abundance(1:end-2)*1000; %mg/gDW
+color     = [1  0  0];                              %Red
+barPlot(abundance,chains,'[mg/gDW]',color,25,500);
 
 %3. Compare distributions of chains:
-old       = getLipidDistribution(model_correctedComp,lipidNames,chains,fluxData);
-new       = getLipidDistribution(model_SLIMEr,lipidNames,chains,fluxData);
+old       = getLipidDistribution(model_correctedComp,lipidNames,chains,data.fluxData);
+new       = getLipidDistribution(model_SLIMEr,lipidNames,chains,data.fluxData);
 oldChains = sum(old.comp)';
 newChains = sum(new.comp)';
 data      = [oldChains/sum(oldChains) newChains/sum(newChains)]*100;
