@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % model = SLIMEr(model,data,includeTails)
 %
-% Benjamín J. Sánchez. Last update: 2017-12-01
+% Benjamín J. Sánchez. Last update: 2017-12-10
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function model = SLIMEr(model,data,includeTails)
@@ -49,6 +49,20 @@ model   = addReaction(model, ...                    %model
                       0, ...                        %LB
                       1000, ...                     %UB
                       0);                           %c
+
+%Lower GAM requirement:
+GAM    = 50;
+bioRxn = strcmp(model.rxnNames,'yeast 8 biomass pseudoreaction');
+ATPpos = strcmp(model.metNames,'ATP [cytoplasm]');
+H2Opos = strcmp(model.metNames,'H2O [cytoplasm]');
+ADPpos = strcmp(model.metNames,'ADP [cytoplasm]');
+Hpos   = strcmp(model.metNames,'H+ [cytoplasm]');
+Ppos   = strcmp(model.metNames,'phosphate [cytoplasm]');
+model.S(ATPpos,bioRxn) = -GAM;
+model.S(H2Opos,bioRxn) = -GAM;
+model.S(ADPpos,bioRxn) = +GAM;
+model.S(Hpos,bioRxn)   = +GAM;
+model.S(Ppos,bioRxn)   = +GAM;
 
 end
 

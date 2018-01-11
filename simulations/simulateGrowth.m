@@ -15,15 +15,14 @@ for i = 1:length(fluxData.rxnIDs)
     model = changeRxnBounds(model,fluxData.rxnIDs(i),UB,'u');
 end
 
-posNGAM = strcmp(model.rxnNames,'non-growth associated maintenance reaction');  %Objective rxn
+%Simulation 1: Maximize maintenance
+posNGAM = strcmp(model.rxnNames,'non-growth associated maintenance reaction');
+model   = changeRxnBounds(model,model.rxns(posNGAM),0,'l');
+model   = changeRxnBounds(model,model.rxns(posNGAM),+1000,'u');
+model   = changeObjective(model,model.rxns(posNGAM),+1);
+sol     = optimizeCbModel(model);
 
-%Simulation 1: Maximize objective function
-model = changeRxnBounds(model,model.rxns(posNGAM),0,'l');
-model = changeRxnBounds(model,model.rxns(posNGAM),+1000,'u');
-model = changeObjective(model,model.rxns(posNGAM),+1);
-sol   = optimizeCbModel(model);
-
-%Simulation 2: Force previous objective function, minimize sum(abs(fluxes))
+%Simulation 2: Force NGAM, minimize sum(abs(fluxes))
 obj   = sol.x(posNGAM);
 model = changeRxnBounds(model,model.rxns(posNGAM),obj*0.999,'l');
 model = changeRxnBounds(model,model.rxns(posNGAM),obj*1.001,'u');

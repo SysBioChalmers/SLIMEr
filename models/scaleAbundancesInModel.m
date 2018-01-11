@@ -57,14 +57,13 @@ model = temp.model;
 model = adjustModel(model,k,true);
 
 %Optimize model:
-data    = temp.data;
-[sol,~] = simulateGrowth(model,data.fluxData);
-
-disp(['Finding scaling range: k = ' num2str(k) ' -> mu = ' num2str(sol.f)])
-
-%Any unfeasible simulation returns the original value:
-if isempty(sol.f)
-    k = temp.kOpt;
+data = temp.data;
+try
+    [sol,~] = simulateGrowth(model,data.fluxData);
+    disp(['Finding scaling range: k = ' num2str(k) ' -> NGAM = ' num2str(sol.f)])
+catch
+    disp(['Finding scaling range: k = ' num2str(k) ' -> NGAM = ' num2str(0)])
+    k = temp.kOpt;  %any unfeasible simulation returns the original value
 end
 
 end
