@@ -26,7 +26,7 @@ model = changeLipidComp(model,data.lipidData);
 
 %Create lipid pseudo-rxn for tails:
 if includeTails
-    model  = changeChainComp(model,data.chainData);
+    model = changeChainComp(model,data.chainData);
 end
 
 %Change overall lipid pseudo-rxn:

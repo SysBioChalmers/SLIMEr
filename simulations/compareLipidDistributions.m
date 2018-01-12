@@ -7,7 +7,7 @@
 %Read data and modify for plotting:
 addpath('../data')
 addpath('../models')
-data = readData;
+data = readData(1);
 
 %1. Exp data: lipid classes
 lipids     = data.lipidData.metAbbrev([1,3:end]);       %Take out ergosterol
@@ -25,10 +25,10 @@ color     = [1  0  0];                              %Red
 barPlot(abundance,chains,'[mg/gDW]',color,25,500);
 
 %3. Compare distributions of chains, with same amount of glucose:
-new = getLipidDistribution(model_SLIMEr,lipidNames,chains,data.fluxData);
+new = getLipidDistribution(model_SLIMEr{1},lipidNames,chains,data.fluxData);
 data.fluxData.averages(1) = new.vgluc;
 data.fluxData.stdevs(1)   = 0;
-old        = getLipidDistribution(model_correctedComp,lipidNames,chains,data.fluxData);
+old        = getLipidDistribution(model_correctedComp{1},lipidNames,chains,data.fluxData);
 oldChains  = sum(old.comp)';
 newChains  = sum(new.comp)';
 abundances = [oldChains/sum(oldChains) newChains/sum(newChains)]*100;
