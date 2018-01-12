@@ -1,13 +1,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % compareLipidDistributions
 %
-% Benjamín J. Sánchez. Last update: 2018-01-11
+% Benjamín J. Sánchez. Last update: 2018-01-12
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Read data and modify for plotting:
 addpath('../data')
+addpath('../models')
 data = readData;
-rmpath('../data')
 
 %1. Exp data: lipid classes
 lipids     = data.lipidData.metAbbrev([1,3:end]);       %Take out ergosterol
@@ -24,9 +24,11 @@ abundance = data.chainData.abundance(1:end-2)*1000; %mg/gDW
 color     = [1  0  0];                              %Red
 barPlot(abundance,chains,'[mg/gDW]',color,25,500);
 
-%3. Compare distributions of chains:
+%3. Compare distributions of chains, with same amount of glucose:
+new = getLipidDistribution(model_SLIMEr,lipidNames,chains,data.fluxData);
+data.fluxData.averages(1) = new.vgluc;
+data.fluxData.stdevs(1)   = 0;
 old        = getLipidDistribution(model_correctedComp,lipidNames,chains,data.fluxData);
-new        = getLipidDistribution(model_SLIMEr,lipidNames,chains,data.fluxData);
 oldChains  = sum(old.comp)';
 newChains  = sum(new.comp)';
 abundances = [oldChains/sum(oldChains) newChains/sum(newChains)]*100;
@@ -62,11 +64,11 @@ legend(b,chains,'Location','northwest')
 legend('boxoff')
 
 %Compare energy differences:
-netATP  = num2str(round(new.netATP - old.netATP,2));
-ATPpos  = strcmp(model_correctedComp.mets,'s_0434[c]');
-Xpos    = strcmp(model_correctedComp.rxns,'r_4041');
-GAM     = 35.36;    %mmol/gDW (Förster et al. 2003 without counting polimerization costs)
-percATP = num2str(round((new.netATP - old.netATP)/GAM*100,1));
+netATP  = num2str(round(old.netATP - new.netATP,2));
+GAMunk  = 35.01;    %mmol/gDW (old model from createNewModels.m)
+percATP = num2str(round((old.netATP - new.netATP)/GAMunk*100,1));
 disp(['net ATP spent in changing lipid comp: ' netATP ' mmol/gDW = ' percATP '% of GAM'])
+rmpath('../data')
+rmpath('../models')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

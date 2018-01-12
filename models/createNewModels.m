@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % createNewModels
 %
-% Benjamín J. Sánchez. Last update: 2018-01-10
+% Benjamín J. Sánchez. Last update: 2018-01-12
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clear variables
@@ -26,8 +26,8 @@ model_SLIMEr = SLIMEr(model_original,data,true);
 model_correctedComp = adjustModel(model_correctedComp,k,false);
 
 %Correct the rest of the composition to be consistent:
-model_correctedComp = changeOtherComp(model_correctedComp,data.otherData);
-model_SLIMEr        = changeOtherComp(model_SLIMEr,data.otherData);
+model_correctedComp = changeOtherComp(model_correctedComp,data);
+model_SLIMEr        = changeOtherComp(model_SLIMEr,data);
 rmpath('../simulations')
 rmpath('../data')
 

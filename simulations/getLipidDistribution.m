@@ -10,11 +10,10 @@ function data = getLipidDistribution(model,lipidNames,chains,fluxData)
 [sol,model_cons] = simulateGrowth(model,fluxData);
 
 %Find growth:
-posX = strcmp(model.rxnNames,'growth');
-mu   = sol.x(posX);
-
-%Find energy requirements:
-[ATP,NADH,NADPH,netATP] = getEnergyexpenditure(model,sol.x/mu);
+posGluc     = strcmp(model.rxnNames,'D-glucose exchange');
+posX        = strcmp(model.rxnNames,'growth');
+posMaint    = strcmp(model.rxnNames,'non-growth associated maintenance reaction');
+mu          = sol.x(posX);
 
 for i = 1:length(chains)
     chains{i} = ['C' chains{i} ' chain [cytoplasm]'];
@@ -61,14 +60,14 @@ for i = 1:length(lipidNames)
     end
 end
 
+%Generate output:
 data.comp    = composition*1000;        %mg/gDW
 data.var.min = variability.min*1000;    %mg/gDW
 data.var.max = variability.max*1000;    %mg/gDW
+data.vgluc   = sol.x(posGluc);          %1/h
 data.mu      = mu;                      %1/h
-data.ATP     = ATP;                     %mmol/gDW
-data.NADH    = NADH;                    %mmol/gDW
-data.NADPH   = NADPH;                   %mmol/gDW
-data.netATP  = netATP;                  %mmol/gDW
+data.NGAM    = sol.x(posMaint);         %mmol/gDWh
+data.netATP  = sol.x(posMaint)/mu;      %mmol/gDW
 
 end
 

@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % [model,k] = scaleAbundancesInModel(model,data)
 %
-% Benjamín J. Sánchez. Last update: 2018-01-10
+% Benjamín J. Sánchez. Last update: 2018-01-11
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [model,k] = scaleAbundancesInModel(model,data)
@@ -60,7 +60,8 @@ model = adjustModel(model,k,true);
 data = temp.data;
 try
     [sol,~] = simulateGrowth(model,data.fluxData);
-    disp(['Finding scaling range: k = ' num2str(k) ' -> NGAM = ' num2str(sol.f)])
+    posNGAM = strcmp(model.rxnNames,'non-growth associated maintenance reaction');
+    disp(['Finding scaling range: k = ' num2str(k) ' -> NGAM = ' num2str(sol.x(posNGAM))])
 catch
     disp(['Finding scaling range: k = ' num2str(k) ' -> NGAM = ' num2str(0)])
     k = temp.kOpt;  %any unfeasible simulation returns the original value

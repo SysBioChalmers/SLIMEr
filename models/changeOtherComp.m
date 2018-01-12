@@ -1,10 +1,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% model = changeOtherComp(model,otherData)
+% model = changeOtherComp(model,data)
 %
-% Benjamín J. Sánchez. Last update: 2018-01-03
+% Benjamín J. Sánchez. Last update: 2018-01-12
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function model = changeOtherComp(model,otherData)
+function model = changeOtherComp(model,data)
+
+otherData = data.otherData;
+fluxData  = data.fluxData;
 
 %Components of biomass:
 %        id             MW [g/mol]  class     name
@@ -95,6 +98,20 @@ for i = 1:length(mets)
     modelPos = strcmp(model.mets,mets{i});
     model.S(modelPos,bioPos) = S(modelPos,bioPos)*fC;
 end
+
+%Estimate maintenance belonging to polymerization, NGAM and unknown:
+[sol,~]     = simulateGrowth(model,fluxData);
+posX        = strcmp(model.rxnNames,'growth');
+posNGAM     = strcmp(model.rxnNames,'non-growth associated maintenance reaction');
+[~,P,C,R,D] = sumBioMass(model,comps);
+mu          = sol.x(posX);
+maintenance = sol.x(posNGAM)/mu;
+GAMpol      = P*37.7 + C*12.8 + R*26.0 + D*26.0;    %Förster 2003 (sup table 8)
+NGAM        = 0.7/mu;
+GAMunk      = maintenance - GAMpol - NGAM;
+disp(['Maintenance = (polymerization = ' num2str(GAMpol) ' mmol/gDW) + (unknown = ' ...
+      num2str(GAMunk) 'mmol/gDW) + (NGAM/mu = ' num2str(NGAM) ' mmol/gDW) = ' ...
+      num2str(maintenance) ' mmol/gDW']) 
 
 end
 
