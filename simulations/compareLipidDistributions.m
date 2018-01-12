@@ -67,7 +67,7 @@ legend('boxoff')
 netATP  = num2str(round(old.netATP - new.netATP,2));
 GAMunk  = 35.01;    %mmol/gDW (old model from createNewModels.m)
 percATP = num2str(round((old.netATP - new.netATP)/GAMunk*100,1));
-disp(['net ATP spent in changing lipid comp: ' netATP ' mmol/gDW = ' percATP '% of GAM'])
+disp(['Net ATP spent in changing lipid comp: ' netATP ' mmol/gDW = ' percATP '% of GAM'])
 rmpath('../data')
 rmpath('../models')
 

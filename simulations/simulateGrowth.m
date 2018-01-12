@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % [sol,model] = simulateGrowth(model,fluxData)
 %
-% Benjamín J. Sánchez. Last update: 2018-01-10
+% Benjamín J. Sánchez. Last update: 2018-01-12
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [sol,model] = simulateGrowth(model,fluxData)
@@ -16,16 +16,16 @@ for i = 1:length(fluxData.rxnIDs)
 end
 
 %Simulation 1: Maximize maintenance
-posNGAM = strcmp(model.rxnNames,'non-growth associated maintenance reaction');
-model   = changeRxnBounds(model,model.rxns(posNGAM),0,'l');
-model   = changeRxnBounds(model,model.rxns(posNGAM),+1000,'u');
-model   = changeObjective(model,model.rxns(posNGAM),+1);
-sol     = optimizeCbModel(model);
+posMaint = strcmp(model.rxnNames,'non-growth associated maintenance reaction');
+model    = changeRxnBounds(model,model.rxns(posMaint),0,'l');
+model    = changeRxnBounds(model,model.rxns(posMaint),+1000,'u');
+model    = changeObjective(model,model.rxns(posMaint),+1);
+sol      = optimizeCbModel(model);
 
-%Simulation 2: Force NGAM, minimize sum(abs(fluxes))
-obj   = sol.x(posNGAM);
-model = changeRxnBounds(model,model.rxns(posNGAM),obj*0.999,'l');
-model = changeRxnBounds(model,model.rxns(posNGAM),obj*1.001,'u');
+%Simulation 2: Force maintenance, minimize sum(abs(fluxes))
+obj   = sol.x(posMaint);
+model = changeRxnBounds(model,model.rxns(posMaint),obj*0.999,'l');
+model = changeRxnBounds(model,model.rxns(posMaint),obj*1.001,'u');
 sol   = optimizeCbModel(model,'min','one');
 
 end

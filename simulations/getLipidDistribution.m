@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % data = getLipidDistribution(model,lipidNames,chains,fluxData)
 %
-% Benjamín J. Sánchez. Last update: 2018-01-11
+% Benjamín J. Sánchez. Last update: 2018-01-12
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function data = getLipidDistribution(model,lipidNames,chains,fluxData)
@@ -61,13 +61,13 @@ for i = 1:length(lipidNames)
 end
 
 %Generate output:
-data.comp    = composition*1000;        %mg/gDW
-data.var.min = variability.min*1000;    %mg/gDW
-data.var.max = variability.max*1000;    %mg/gDW
-data.vgluc   = sol.x(posGluc);          %1/h
-data.mu      = mu;                      %1/h
-data.NGAM    = sol.x(posMaint);         %mmol/gDWh
-data.netATP  = sol.x(posMaint)/mu;      %mmol/gDW
+data.comp        = composition*1000;        %mg/gDW
+data.var.min     = variability.min*1000;    %mg/gDW
+data.var.max     = variability.max*1000;    %mg/gDW
+data.vgluc       = sol.x(posGluc);          %1/h
+data.mu          = mu;                      %1/h
+data.maintenance = sol.x(posMaint);         %mmol/gDWh
+data.netATP      = sol.x(posMaint)/mu;      %mmol/gDW
 
 end
 

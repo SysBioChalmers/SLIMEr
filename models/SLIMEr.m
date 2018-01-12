@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % model = SLIMEr(model,data,includeTails)
 %
-% Benjamín J. Sánchez. Last update: 2018-01-11
+% Benjamín J. Sánchez. Last update: 2018-01-12
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function model = SLIMEr(model,data,includeTails)
@@ -50,7 +50,7 @@ model   = addReaction(model, ...                    %model
                       1000, ...                     %UB
                       0);                           %c
 
-%Lower GAM requirement:
+%Remove GAM requirement:
 GAM    = 0;
 bioRxn = strcmp(model.rxnNames,'yeast 8 biomass pseudoreaction');
 ATPpos = strcmp(model.metNames,'ATP [cytoplasm]');

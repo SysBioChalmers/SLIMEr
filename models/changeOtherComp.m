@@ -102,10 +102,10 @@ end
 %Estimate maintenance belonging to polymerization, NGAM and unknown:
 [sol,~]     = simulateGrowth(model,fluxData);
 posX        = strcmp(model.rxnNames,'growth');
-posNGAM     = strcmp(model.rxnNames,'non-growth associated maintenance reaction');
+posMaint    = strcmp(model.rxnNames,'non-growth associated maintenance reaction');
 [~,P,C,R,D] = sumBioMass(model,comps);
 mu          = sol.x(posX);
-maintenance = sol.x(posNGAM)/mu;
+maintenance = sol.x(posMaint)/mu;
 GAMpol      = P*37.7 + C*12.8 + R*26.0 + D*26.0;    %Förster 2003 (sup table 8)
 NGAM        = 0.7/mu;
 GAMunk      = maintenance - GAMpol - NGAM;
