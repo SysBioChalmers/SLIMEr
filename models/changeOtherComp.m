@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % model = changeOtherComp(model,data)
 %
-% Benjamín J. Sánchez. Last update: 2018-01-12
+% Benjamín J. Sánchez. Last update: 2018-01-17
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function model = changeOtherComp(model,data)
@@ -52,19 +52,18 @@ comps = {'s_0404[c]'	89.09       'P'     % A     Alanine         ala
 %Change given abundances in model:
 [~,P,~,R,~] = sumBioMass(model,comps);
 bioPos      = strcmp(model.rxns,'r_4041');
-S           = full(model.S);
 for i = 1:length(otherData.metIDs)
     if strcmp(otherData.metIDs{i},'protein')
         fP   = otherData.abundance(i)/P;                            %ratio to scale
         isAA = ~cellfun(@isempty,strfind(model.metNames,'tRNA'));   %protein components
-        model.S(isAA,bioPos) = S(isAA,bioPos)*fP;
+        model.S(isAA,bioPos) = full(model.S(isAA,bioPos))*fP;
         
     elseif strcmp(otherData.metIDs{i},'RNA')
         fR    = otherData.abundance(i)/R;           %ratio to scale
         nucs  = comps(strcmp(comps(:,3),'R'),1);    %RNA components
         for j = 1:length(nucs)
             modelPos = strcmp(model.mets,nucs{j});
-            model.S(modelPos,bioPos) = S(modelPos,bioPos)*fR;
+            model.S(modelPos,bioPos) = full(model.S(modelPos,bioPos))*fR;
         end
         
     else
@@ -75,35 +74,30 @@ for i = 1:length(otherData.metIDs)
 end
 
 %Compute new biomass and lipid fraction:
-[X,~,~,~,~] = sumBioMass(model,comps);
+[X,~,C,~,~] = sumBioMass(model,comps);
 lipidPos    = strcmp(model.rxnNames,'lipid pseudoreaction - backbone');
 if sum(lipidPos) == 0
     lipidPos = strcmp(model.rxnNames,'lipid pseudoreaction');
 end
-subs  = model.S(:,lipidPos) < 0;   %substrates in lipid pseudo-rxn
-L     = -sum(S(subs,lipidPos));    %lipid composition
-delta = (X+L)-1;                   %difference to balance
+subs  = model.S(:,lipidPos) < 0;        %substrates in lipid pseudo-rxn
+L     = -sum(model.S(subs,lipidPos));   %lipid composition
+delta = (X+L)-1;                        %difference to balance
 
-%Balance out mass with glucan (both types) and mannan:
-mets    = {'s_0001[ce]', 's_0004[ce]', 's_1107[c]'};
-massPre = 0;
-for i = 1:length(mets)
-    modelPos = strcmp(model.mets,mets{i});
-    compPos  = strcmp(comps(:,1),mets{i});
-    massPre  = massPre + -S(modelPos,bioPos)*comps{compPos,2}/1000;
-end
+%Balance out mass with all sugars:
+mets     = comps(strcmp(comps(:,3),'C'),1);
+massPre  = C;
 massPost = massPre - delta;
 fC       = massPost/massPre;
 for i = 1:length(mets)
     modelPos = strcmp(model.mets,mets{i});
-    model.S(modelPos,bioPos) = S(modelPos,bioPos)*fC;
+    model.S(modelPos,bioPos) = model.S(modelPos,bioPos)*fC;
 end
+[~,P,C,R,D] = sumBioMass(model,comps);
 
 %Estimate maintenance belonging to polymerization, NGAM and unknown:
 [sol,~]     = simulateGrowth(model,fluxData);
 posX        = strcmp(model.rxnNames,'growth');
 posMaint    = strcmp(model.rxnNames,'non-growth associated maintenance reaction');
-[~,P,C,R,D] = sumBioMass(model,comps);
 mu          = sol.x(posX);
 maintenance = sol.x(posMaint)/mu;
 GAMpol      = P*37.7 + C*12.8 + R*26.0 + D*26.0;    %Förster 2003 (sup table 8)
