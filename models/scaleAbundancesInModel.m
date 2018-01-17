@@ -36,7 +36,11 @@ model = adjustModel(model,k,false);
 
 %Optimize model:
 data    = temp.data;
-[sol,~] = simulateGrowth(model,data.fluxData);
+try
+    [sol,~] = simulateGrowth(model,data.fluxData);
+catch
+    sol.x = ones(size(model.rxns));
+end
 
 %Objective function: unused tails or backbones
 exchange_tails = sol.x(strcmp(model.rxnNames,'lipid - tails exchange'));
