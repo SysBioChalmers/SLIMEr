@@ -27,13 +27,12 @@ for i = 1:10
     model_SLIMEr{i} = SLIMEr(model_original,data,true);
     
     %Make abundances be consistent:
-    [model_SLIMEr{i},k(1)] = scaleAbundancesInModel(model_SLIMEr{i},data);
+    [model_SLIMEr{i},k(i)] = scaleAbundancesInModel(model_SLIMEr{i},data);
     model_correctedComp{i} = adjustModel(model_correctedComp{i},k(1),false);
     
     %Correct the rest of the composition to be consistent:
     model_correctedComp{i} = changeOtherComp(model_correctedComp{i},data);
     model_SLIMEr{i}        = changeOtherComp(model_SLIMEr{i},data);
-    pause
 end
 
 rmpath('../simulations')
