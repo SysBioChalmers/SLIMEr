@@ -63,9 +63,10 @@ b = barPlot(new,lipids,'[mg/gDW]',color,20,900);
 legend(b,chains,'Location','northwest')
 legend('boxoff')
 
-%Compare energy differences:
+%Compare energy differences at reference condition:
 netATP  = num2str(round(old.netATP - new.netATP,2));
-GAMunk  = 35.01;    %mmol/gDW (old model from createNewModels.m)
+NGAM    = 0.7;
+GAMunk  = 42.12 - NGAM/0.1;    %mmol/gDW (old model from createNewModels.m)
 percATP = num2str(round((old.netATP - new.netATP)/GAMunk*100,1));
 disp(['Net ATP spent in changing lipid comp: ' netATP ' mmol/gDW = ' percATP '% of GAM'])
 rmpath('../data')

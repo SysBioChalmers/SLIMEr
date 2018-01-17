@@ -94,18 +94,16 @@ for i = 1:length(mets)
 end
 [~,P,C,R,D] = sumBioMass(model,comps);
 
-%Estimate maintenance belonging to polymerization, NGAM and unknown:
+%Estimate maintenance belonging to polymerization and unknown:
 [sol,~]     = simulateGrowth(model,fluxData);
 posX        = strcmp(model.rxnNames,'growth');
 posMaint    = strcmp(model.rxnNames,'non-growth associated maintenance reaction');
 mu          = sol.x(posX);
 maintenance = sol.x(posMaint)/mu;
-GAMpol      = P*37.7 + C*12.8 + R*26.0 + D*26.0;    %Förster 2003 (sup table 8)
-NGAM        = 0.7/mu;
-GAMunk      = maintenance - GAMpol - NGAM;
-disp(['Maintenance = (polymerization = ' num2str(GAMpol) ' mmol/gDW) + (unknown = ' ...
-      num2str(GAMunk) 'mmol/gDW) + (NGAM/mu = ' num2str(NGAM) ' mmol/gDW) = ' ...
-      num2str(maintenance) ' mmol/gDW']) 
+MaintPol    = P*37.7 + C*12.8 + R*26.0 + D*26.0;    %Förster 2003 (sup table 8)
+MaintUnk      = maintenance - MaintPol;
+disp(['Maintenance = (polymerization = ' num2str(MaintPol) ' mmol/gDW) + (unknown = ' ...
+      num2str(MaintUnk) 'mmol/gDW) = ' num2str(maintenance) ' mmol/gDW'])
 
 end
 
