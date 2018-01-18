@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % compareLipidDistributions
 %
-% Benjamín J. Sánchez. Last update: 2018-01-17
+% Benjamín J. Sánchez. Last update: 2018-01-18
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Gety lipid distribution for each condition:
@@ -71,21 +71,19 @@ b = barPlot(new{1},lipids,'[mg/gDW]',color,20,900);
 legend(b,chains,'Location','northwest')
 legend('boxoff')
 
-%Compare energy differences at reference condition:
-netATP  = num2str(round(old{1}.netATP - new{1}.netATP,2));
-NGAM    = 0.7;
-GAMunk  = 42.12 - NGAM/0.1;    %mmol/gDW (old model from createNewModels.m)
-percATP = num2str(round((old{1}.netATP - new{1}.netATP)/GAMunk*100,1));
-disp(['Net ATP spent in changing lipid comp: ' netATP ' mmol/gDW = ' percATP '% of GAM'])
-rmpath('../data')
-rmpath('../models')
-
 %8. Compare energy differences at different conditions:
-ATPdiff = zeros(size(model_SLIMEr))';
+NGAM    = 0.7;                                          %Nilsson et al. 2016
+GAMunk  = old{1}.netATP - GAMpol(1) - NGAM/old{1}.mu;   %mmol/gDW
+NGAMs   = zeros(length(model_SLIMEr),1);
+ATPdiff = zeros(length(model_SLIMEr),1);
 for i = 1:length(ATPdiff)
-    ATPdiff(i) = old{i}.netATP - new{i}.netATP;
+    NGAMs(i)   = (old{i}.netATP - GAMpol(i) - GAMunk)*old{i}.mu;    %mmol/gDWh
+    ATPdiff(i) = old{i}.netATP - new{i}.netATP;                     %mmol/gDW
 end
 conditions = {'REF','T33','T36','T38','O200','O400','O600','E20','E40','E60'};
+b = barPlot(NGAMs,conditions,'[mmol/gDWh]',[0 0 1],35,900);
 b = barPlot(ATPdiff,conditions,'[mmol/gDW]',[0 0 1],0.3,900);
+rmpath('../data')
+rmpath('../models')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

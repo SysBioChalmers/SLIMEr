@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % createNewModels
 %
-% Benjamín J. Sánchez. Last update: 2018-01-12
+% Benjamín J. Sánchez. Last update: 2018-01-18
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clear variables
@@ -15,7 +15,8 @@ model_original = model_original.model;
 %Create 2 models for each of the 10 conditions:
 model_correctedComp = cell(1,10);
 model_SLIMEr        = cell(1,10);
-k = zeros(1,10);
+GAMpol              = zeros(1,10);
+k                   = zeros(1,10);
 for i = 1:10
     %Read data:
     data = readData(i);
@@ -31,8 +32,8 @@ for i = 1:10
     model_correctedComp{i} = adjustModel(model_correctedComp{i},k(i),false);
     
     %Correct the rest of the composition to be consistent:
-    model_correctedComp{i} = changeOtherComp(model_correctedComp{i},data);
-    model_SLIMEr{i}        = changeOtherComp(model_SLIMEr{i},data);
+    [model_correctedComp{i},~]  = changeOtherComp(model_correctedComp{i},data);
+    [model_SLIMEr{i},GAMpol(i)] = changeOtherComp(model_SLIMEr{i},data);
 end
 
 rmpath('../simulations')
