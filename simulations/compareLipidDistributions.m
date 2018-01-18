@@ -80,4 +80,12 @@ disp(['Net ATP spent in changing lipid comp: ' netATP ' mmol/gDW = ' percATP '% 
 rmpath('../data')
 rmpath('../models')
 
+%8. Compare energy differences at different conditions:
+ATPdiff = zeros(size(model_SLIMEr))';
+for i = 1:length(ATPdiff)
+    ATPdiff(i) = old{i}.netATP - new{i}.netATP;
+end
+conditions = {'REF','T33','T36','T38','O200','O400','O600','E20','E40','E60'};
+b = barPlot(ATPdiff,conditions,'[mmol/gDW]',[0 0 1],0.3,900);
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
