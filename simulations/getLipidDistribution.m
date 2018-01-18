@@ -10,10 +10,10 @@ function data = getLipidDistribution(model,lipidNames,chains,fluxData)
 [sol,model_cons] = simulateGrowth(model,fluxData);
 
 %Find growth:
-posGluc     = strcmp(model.rxnNames,'D-glucose exchange');
-posX        = strcmp(model.rxnNames,'growth');
-posMaint    = strcmp(model.rxnNames,'non-growth associated maintenance reaction');
-mu          = sol.x(posX);
+posGluc  = strcmp(model.rxnNames,'D-glucose exchange');
+posX     = strcmp(model.rxnNames,'growth');
+posMaint = strcmp(model.rxnNames,'non-growth associated maintenance reaction');
+mu       = sol.x(posX);
 
 for i = 1:length(chains)
     chains{i} = ['C' chains{i} ' chain [cytoplasm]'];

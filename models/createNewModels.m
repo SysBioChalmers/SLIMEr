@@ -28,7 +28,7 @@ for i = 1:10
     
     %Make abundances be consistent:
     [model_SLIMEr{i},k(i)] = scaleAbundancesInModel(model_SLIMEr{i},data);
-    model_correctedComp{i} = adjustModel(model_correctedComp{i},k(1),false);
+    model_correctedComp{i} = adjustModel(model_correctedComp{i},k(i),false);
     
     %Correct the rest of the composition to be consistent:
     model_correctedComp{i} = changeOtherComp(model_correctedComp{i},data);
