@@ -1,16 +1,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% [X,P,C,R,D] = sumBioMass(model,comps)
+% [X,P,C,R,D,L] = sumBioMass(model,comps)
 % Calculates breakdown of biomass:
 % X -> Biomass fraction without lipids [g/gDW]
 % P -> Protein fraction [g/gDW]
 % C -> Carbohydrate fraction [g/gDW]
 % R -> RNA fraction [g/gDW]
 % D -> DNA fraction [g/gDW]
+% L -> Lipid fraction [g/gDW]
 %
-% Benjamín J. Sánchez. Last update: 2018-01-03
+% Benjamín J. Sánchez. Last update: 2018-01-19
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [X,P,C,R,D] = sumBioMass(model,comps)
+function [X,P,C,R,D,L] = sumBioMass(model,comps)
 
 bioPos = strcmp(model.rxns,'r_4041');
 X      = 0;
@@ -34,7 +35,15 @@ for i = 1:length(model.mets)
         end
     end
 end
-     
+
+lipidPos = strcmp(model.rxnNames,'lipid pseudoreaction - backbone');
+if sum(lipidPos) == 0
+    lipidPos = strcmp(model.rxnNames,'lipid pseudoreaction');
+end
+subs  = model.S(:,lipidPos) < 0;        %substrates in lipid pseudo-rxn
+L     = -sum(model.S(subs,lipidPos));   %lipid composition
+X     = X + L;
+
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

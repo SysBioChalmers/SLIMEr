@@ -1,13 +1,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % [model,GAMpol] = changeOtherComp(model,data)
 %
-% Benjamín J. Sánchez. Last update: 2018-01-18
+% Benjamín J. Sánchez. Last update: 2018-01-19
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [model,GAMpol] = changeOtherComp(model,data)
 
 otherData = data.otherData;
-fluxData  = data.fluxData;
 
 %Components of biomass:
 %        id             MW [g/mol]  class     name
@@ -50,8 +49,8 @@ comps = {'s_0404[c]'	89.09       'P'     % A     Alanine         ala
          's_1467[c]'    96.06       'N'};   % sulphate
 
 %Change given abundances in model:
-[~,P,~,R,~] = sumBioMass(model,comps);
-bioPos      = strcmp(model.rxns,'r_4041');
+[~,P,~,R,~,~] = sumBioMass(model,comps);
+bioPos        = strcmp(model.rxns,'r_4041');
 for i = 1:length(otherData.metIDs)
     if strcmp(otherData.metIDs{i},'protein')
         fP   = otherData.abundance(i)/P;                            %ratio to scale
@@ -74,14 +73,8 @@ for i = 1:length(otherData.metIDs)
 end
 
 %Compute new biomass and lipid fraction:
-[X,~,C,~,~] = sumBioMass(model,comps);
-lipidPos    = strcmp(model.rxnNames,'lipid pseudoreaction - backbone');
-if sum(lipidPos) == 0
-    lipidPos = strcmp(model.rxnNames,'lipid pseudoreaction');
-end
-subs  = model.S(:,lipidPos) < 0;        %substrates in lipid pseudo-rxn
-L     = -sum(model.S(subs,lipidPos));   %lipid composition
-delta = (X+L)-1;                        %difference to balance
+[X,~,C,~,~,~] = sumBioMass(model,comps);
+delta         = X - 1;                      %difference to balance
 
 %Balance out mass with all sugars:
 mets     = comps(strcmp(comps(:,3),'C'),1);
@@ -94,8 +87,8 @@ for i = 1:length(mets)
 end
 
 %Estimate maintenance belonging to polymerization:
-[~,P,C,R,D] = sumBioMass(model,comps);
-GAMpol      = P*37.7 + C*12.8 + R*26.0 + D*26.0;    %Förster 2003 (sup table 8)
+[~,P,C,R,D,~] = sumBioMass(model,comps);
+GAMpol        = P*37.7 + C*12.8 + R*26.0 + D*26.0;    %Förster 2003 (sup table 8)
 
 end
 
