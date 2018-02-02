@@ -40,7 +40,6 @@ set(gca,'FontSize',text_size)
 ylabel(['Abundance ' units],'FontSize',text_size);
 xlim([0.5,M+0.5])
 ylim([0 ymax])
-set(gca,'FontSize',text_size)
 set(gca,'XColor','k')
 set(gca,'YColor','k')
 box on
