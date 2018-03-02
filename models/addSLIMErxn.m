@@ -35,9 +35,9 @@ switch backName
           'inositol phosphomannosylinositol phosphoceramide'
           'mannosylinositol phosphorylceramide'}
         if ~isempty(strfind(specName,'(C24)'))
-            tailsRxn = {'C16:0';'C24:0'};
+            tailsRxn = {'C18:0';'C24:0'};
         elseif ~isempty(strfind(specName,'(C26)'))
-            tailsRxn = {'C16:0';'C26:0'};
+            tailsRxn = {'C18:0';'C26:0'};
         end
         
     %Cases with specific erg-ester name:
