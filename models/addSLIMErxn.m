@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % model = addSLIMErxn(model,rxnID)
 %
-% Benjamín J. Sánchez. Last update: 2017-11-30
+% Benjamín J. Sánchez. Last update: 2018-03-02
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function model = addSLIMErxn(model,rxnID)
@@ -34,9 +34,9 @@ switch backName
     case {'inositol-P-ceramide'
           'inositol phosphomannosylinositol phosphoceramide'
           'mannosylinositol phosphorylceramide'}
-        if ~isempty(strfind(specName,'(C24)'))
+        if contains(specName,'(C24)')
             tailsRxn = {'C18:0';'C24:0'};
-        elseif ~isempty(strfind(specName,'(C26)'))
+        elseif contains(specName,'(C26)')
             tailsRxn = {'C18:0';'C26:0'};
         end
         
