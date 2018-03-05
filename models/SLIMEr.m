@@ -8,10 +8,11 @@ function model = SLIMEr(model,data,includeTails)
 
 %Add new metabolites:
 for i = 1:length(data.chainData.metNames)
-    model = addLipidSpecies(model,data.chainData.metNames{i},data.chainData.formulas{i},~includeTails);
+    metName = [data.chainData.metNames{i} ' [cytoplasm]'];
+    model   = addLipidSpecies(model,metName,data.chainData.formulas{i},~includeTails);
 end
-model = addLipidSpecies(model,'lipid - backbones','NA',includeTails);
-model = addLipidSpecies(model,'lipid - tails','NA',includeTails);
+model = addLipidSpecies(model,'lipid - backbones [cytoplasm]','NA',includeTails);
+model = addLipidSpecies(model,'lipid - tails [cytoplasm]','NA',includeTails);
 
 %Add SLIME reactions replacing existing ISA rxns:
 rxnIDs   = model.rxns;
