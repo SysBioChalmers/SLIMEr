@@ -9,13 +9,14 @@ function model = addSLIMErxn(model,rxnID,specID)
 %Already existing ISA-rxns:
 if isempty(specID)
     rxnPos  = strcmp(model.rxns,rxnID);
-    specPos = model.S(:,rxnPos) < 0;
+    printRxnFormula(model,model.rxns{rxnPos},true,true,true);
+    specPos = find(model.S(:,rxnPos) < 0);
     specID  = model.mets{specPos};
 end
 
 %Non existing ISA rxn:
 if isempty(rxnID)
-    rxnID   = getNewIndex(model.rxns);
+    rxnID   = ['r_' getNewIndex(model.rxns)];
     specPos = strcmp(model.mets,specID);
 end
 
@@ -27,12 +28,15 @@ rxnName  = [specName ' SLIME rxn'];
 backName = getBackboneName(specName);
 backPos  = strcmp(model.metNames,backName);
 if isempty(backName)
+    disp('removing')
     model = removeRxns(model,rxnID);    %dolichol and any other weird ISA rxn
     return
 elseif sum(backPos) > 0
     backID = model.mets{backPos};       %backbone already exists
 else
-    backID = getNewIndex(model.mets);   %create new backbone
+    model   = addLipidSpecies(model,backName,'',false); %add formula later
+    backPos = strcmp(model.metNames,backName);
+    backID  = model.mets{backPos};
 end
 backName = backName(1:strfind(backName,'[')-2);
 specName = specName(1:strfind(specName,'[')-2);
