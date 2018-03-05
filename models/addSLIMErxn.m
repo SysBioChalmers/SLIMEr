@@ -47,9 +47,9 @@ switch backName
         tailsRxn = esters(strcmp(esters(:,1),specName),2);
         
     %Cases with specific FA name:
-    %OBS: For now, only marked ones are being added in the model
+    %OBS: Only C16 and C18 (marked with "%") are added to the model
     case 'fatty acid'
-        FAs = {'myristate'          'C14:0'     %
+        FAs = {'myristate'          'C14:0'
                'myristoleate'       'C14:1'
                'pentadecanoate'     'C15:0'
                'palmitate'          'C16:0'     %
