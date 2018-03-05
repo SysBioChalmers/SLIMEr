@@ -14,9 +14,11 @@ model = addLipidSpecies(model,'lipid - backbones','NA',includeTails);
 model = addLipidSpecies(model,'lipid - tails','NA',includeTails);
 
 %Add SLIME reactions replacing existing ISA rxns:
-for i = 1:length(model.rxns)
-    if ~isempty(strfind(model.rxnNames{i},'isa '))
-        model = addSLIMErxn(model,model.rxns{i},[]);
+rxnIDs   = model.rxns;
+rxnNames = model.rxnNames;
+for i = 1:length(rxnIDs)
+    if contains(rxnNames{i},'isa ')
+        model = addSLIMErxn(model,rxnIDs{i},[]);
     end
 end
 
