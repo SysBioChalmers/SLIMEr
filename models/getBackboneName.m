@@ -26,9 +26,9 @@ group1 = {'1-phosphatidyl-1D-myo-inositol'                      'cytoplasm'
           'inositol phosphomannosylinositol phosphoceramide'    'Golgi'
           'mannosylinositol phosphorylceramide'                 'Golgi'};
 for i = 1:length(group1)
-    if startsWith(specName,group1{i,1}) && strcmp(compName,group1{i,2}) && ...
-                  ~strcmp(specName,group1{i,1}) && ~contains(specName,'phosphate')
-        backName = [group1{i,1} ' [' group1{i,2} ']'];
+    if startsWith(specName,group1{i,1}) && ~strcmp(specName,group1{i,1}) && ...
+                  ~contains(specName,'phosphate')
+        backName = [group1{i,1} ' [' compName ']'];
     end
 end
 
@@ -49,8 +49,8 @@ group2 = {'myristate'                       'fatty acid'                'cytopla
           'sphinganine 1-phosphate'         'long-chain base phosphate' 'endoplasmic reticulum'
           'phytosphingosine 1-phosphate'	'long-chain base phosphate' 'endoplasmic reticulum'};
 for i = 1:length(group2)
-    if strcmp(specName,group2{i,1}) && strcmp(compName,group2{i,3})
-        backName = [group2{i,2} ' [' group2{i,3} ']'];
+    if strcmp(specName,group2{i,1})
+        backName = [group2{i,2} ' [' compName ']'];
     end
 end
 
