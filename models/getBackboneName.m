@@ -33,15 +33,10 @@ for i = 1:length(group1)
 end
 
 %Group 2: replace specific name by generic
-group2 = {'myristate'                       'fatty acid'                'cytoplasm'
-          'myristoleate'                    'fatty acid'                'cytoplasm'
-          'pentadecanoate'                  'fatty acid'                'cytoplasm'
-          'palmitate'                       'fatty acid'                'cytoplasm'
+group2 = {'palmitate'                       'fatty acid'                'cytoplasm'
           'palmitoleate'                    'fatty acid'                'cytoplasm'
           'stearate'                        'fatty acid'                'cytoplasm'
           'oleate'                          'fatty acid'                'cytoplasm'
-          'nonadecanoate'                   'fatty acid'                'cytoplasm'
-          'eicosanoate'                     'fatty acid'                'cytoplasm'
           'ergosteryl palmitoleate'         'ergosterol ester'          'endoplasmic reticulum membrane'
           'ergosteryl oleate'               'ergosterol ester'          'endoplasmic reticulum membrane'
           'sphinganine'                     'long-chain base'           'endoplasmic reticulum'
