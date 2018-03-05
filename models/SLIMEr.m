@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % model = SLIMEr(model,data,includeTails)
 %
-% Benjamín J. Sánchez. Last update: 2018-01-12
+% Benjamín J. Sánchez. Last update: 2018-03-05
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function model = SLIMEr(model,data,includeTails)
@@ -13,11 +13,20 @@ end
 model = addLipidSpecies(model,'lipid - backbones','NA',includeTails);
 model = addLipidSpecies(model,'lipid - tails','NA',includeTails);
 
-%Add SLIME reactions:
+%Add SLIME reactions replacing existing ISA rxns:
 for i = 1:length(model.rxns)
     if ~isempty(strfind(model.rxnNames{i},'isa '))
-        model = addSLIMErxn(model,model.rxns{i});
-        printRxnFormula(model,model.rxns{i},true,true,true);
+        model = addSLIMErxn(model,model.rxns{i},[]);
+    end
+end
+
+%Add new SLIME reactions (no corresponding ISA rxns):
+metIDs   = model.mets;
+metNames = model.metNames;
+for i = 1:length(metIDs)
+    backName = getBackboneName(metNames{i});
+    if ~isempty(backName)
+        model = addSLIMErxn(model,[],metIDs{i});
     end
 end
 
