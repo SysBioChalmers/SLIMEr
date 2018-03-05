@@ -12,6 +12,16 @@ for i = 1:length(data.chainData.metNames)
     model   = addLipidSpecies(model,metName,data.chainData.formulas{i},~includeTails);
 end
 
+%Create lipid pseudo-rxn for backbones:
+model = addLipidSpecies(model,'lipid - backbones [cytoplasm]','NA',includeTails);
+model = changeLipidComp(model,data.lipidData);
+
+%Create lipid pseudo-rxn for tails:
+if includeTails
+    model = addLipidSpecies(model,'lipid - tails [cytoplasm]','NA',includeTails);
+    model = changeChainComp(model,data.chainData);
+end
+
 %Add SLIME reactions replacing existing ISA rxns:
 rxnIDs   = model.rxns;
 rxnNames = model.rxnNames;
@@ -21,7 +31,7 @@ for i = 1:length(rxnIDs)
     end
 end
 
-%Add new SLIME reactions (no corresponding ISA rxns):
+%Add new SLIME reactions (with no corresponding ISA rxns):
 metIDs   = model.mets;
 metNames = model.metNames;
 for i = 1:length(metIDs)
@@ -29,16 +39,6 @@ for i = 1:length(metIDs)
     if ~isempty(backName)
         model = addSLIMErxn(model,[],metIDs{i});
     end
-end
-
-%Create lipid pseudo-rxn for backbones:
-model = addLipidSpecies(model,'lipid - backbones [cytoplasm]','NA',includeTails);
-model = changeLipidComp(model,data.lipidData);
-
-%Create lipid pseudo-rxn for tails:
-if includeTails
-    model = addLipidSpecies(model,'lipid - tails [cytoplasm]','NA',includeTails);
-    model = changeChainComp(model,data.chainData);
 end
 
 %Change overall lipid pseudo-rxn:
