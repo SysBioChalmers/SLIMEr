@@ -25,11 +25,15 @@ end
 %Add SLIME reactions replacing existing ISA rxns:
 rxnIDs   = model.rxns;
 rxnNames = model.rxnNames;
+toDelete = false(size(rxnIDs));
 for i = 1:length(rxnIDs)
     if contains(rxnNames{i},'isa ')
-        model = addSLIMErxn(model,rxnIDs{i},[]);
+        [model,toDelete(i)] = addSLIMErxn(model,rxnIDs{i},[]);
     end
 end
+
+%Delete ISA rxns not used:
+model = removeRxns(model,rxnIDs(toDelete));
 
 %Add new SLIME reactions (with no corresponding ISA rxns):
 metIDs   = model.mets;
@@ -37,7 +41,7 @@ metNames = model.metNames;
 for i = 1:length(metIDs)
     backName = getBackboneName(metNames{i});
     if ~isempty(backName)
-        model = addSLIMErxn(model,[],metIDs{i});
+        [model,~] = addSLIMErxn(model,[],metIDs{i});
     end
 end
 

@@ -1,10 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% model = addSLIMErxn(model,rxnID,specID)
+% [model,toDelete] = addSLIMErxn(model,rxnID,specID)
 %
 % Benjamín J. Sánchez. Last update: 2018-03-05
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function model = addSLIMErxn(model,rxnID,specID)
+function [model,toDelete] = addSLIMErxn(model,rxnID,specID)
 
 %Already existing ISA-rxns:
 if isempty(specID)
@@ -27,9 +27,10 @@ rxnName  = [specName ' SLIME rxn'];
 %Generic lipid (backbone):
 backName = getBackboneName(specName);
 backPos  = strcmp(model.metNames,backName);
+toDelete = false;
 if isempty(backName)
-    disp('removing')
-    model = removeRxns(model,rxnID);    %dolichol and any other weird ISA rxn
+    disp('removing')    %dolichol and any other weird ISA rxn
+    toDelete = true;
     return
 elseif sum(backPos) > 0
     backID = model.mets{backPos};       %backbone already exists
