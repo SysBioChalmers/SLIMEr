@@ -126,10 +126,13 @@ model = addReaction(model,rxnID, ...
                     'upperBound', 1000, ...
                     'checkDuplicate', true);
 
-printRxnFormula(model,rxnID,true,true,true);
-
 %Remove wrongly created field:
-model = rmfield(model,'grRules');
+try
+    model = rmfield(model,'grRules');
+    printRxnFormula(model,rxnID,true,true,true);
+catch
+    disp(['Repeated: ' rxnName])
+end
 
 end
 
