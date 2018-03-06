@@ -44,7 +44,8 @@ abundances = [oldChains/sum(oldChains) newChains/sum(newChains)]*100;
 color      = [1  1  0      %Yellow
               1  0  0];    %Red
 barPlot(abundances,chains,'[%]',color,60,900);
-legend('Yeast7 - correct lipid composition','Yeast7 - correct lipid+chain composition','Location','northwest')
+legend('Yeast7 - correct lipid composition','Yeast7 - correct lipid+chain composition', ...
+       'Location','northeast')
 legend('boxoff')
 
 %4. Compare distribution of chains in lipids - old model:
