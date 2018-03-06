@@ -22,5 +22,7 @@ for i = 1:length(data)
     barPlot(abundance,metNames,'[% mol/mol]','r',20,1400,std)
     
 end
+rmpath('../data')
+rmpath('../models')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
