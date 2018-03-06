@@ -1,10 +1,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% b = barPlot(data,names,units,color,ymax,xlength)
+% b = barPlot(data,names,units,color,ymax,xlength,std)
 %
-% Benjamín J. Sánchez. Last update: 2017-12-13
+% Benjamín J. Sánchez. Last update: 2018-03-06
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function b = barPlot(data,names,units,color,ymax,xlength)
+function b = barPlot(data,names,units,color,ymax,xlength,std)
+
+if nargin < 7
+    std = [];
+end
 
 figure('position', [100,100,xlength,400])
 hold on
@@ -33,6 +37,11 @@ else
     end
 end
 
+%Add standard deviation:
+if ~isempty(std)
+    errorbar(1:length(names),data,std,'.')
+end
+
 %Various options:
 text_size = 12;
 set(gca,'XTick',1:length(names),'XTickLabel',names)
@@ -44,6 +53,11 @@ set(gca,'XColor','k')
 set(gca,'YColor','k')
 box on
 hold off
+
+%Shrink and rotate labels when there are too many:
+if length(names) > 40
+    xticklabel_rotate([],90,[],'Fontsize',text_size/3)
+end
 
 end
 
