@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % createNewModels
 %
-% Benjamín J. Sánchez. Last update: 2018-01-18
+% Benjamín J. Sánchez. Last update: 2018-03-06
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clear variables
@@ -19,7 +19,7 @@ GAMpol              = zeros(1,10);
 k                   = zeros(1,10);
 for i = 1:10
     %Read data:
-    data = readData(i);
+    data = readLahtveeData(i);
     
     %Model with lipid composition corrected:
     model_correctedComp{i} = SLIMEr(model_original,data,false);

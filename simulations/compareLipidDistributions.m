@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % compareLipidDistributions
 %
-% Benjamín J. Sánchez. Last update: 2018-02-02
+% Benjamín J. Sánchez. Last update: 2018-03-06
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Get lipid distribution for each condition:
@@ -13,7 +13,7 @@ old  = cell(size(model_correctedComp));
 new  = cell(size(model_correctedComp));
 for i = 1:length(data)
     %Read and modify data:
-    data{i}    = readData(i);
+    data{i}    = readLahtveeData(i);
     lipidNames = data{i}.lipidData.metNames([1,3:end]);     %Take out ergosterol
     chains     = data{i}.chainData.metNames(1:end-2);       %Take out very long chain F.A.s
     chains     = strrep(chains,' chain','');

@@ -1,10 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% data = readData(i)
+% data = readLahtveeData(i)
 %
-% Benjamín J. Sánchez. Last update: 2018-01-12
+% Benjamín J. Sánchez. Last update: 2018-03-05
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function data = readData(i)
+function data = readLahtveeData(i)
 
 %Lipid data:
 fid = fopen('lipidData_Lahtvee2016.csv');
