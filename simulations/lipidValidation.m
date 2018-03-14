@@ -19,7 +19,7 @@ for i = 1:length(data)
     std       = data.std(1:end-1)*1000;         %mg/gDW
     
     %Plot data:
-    barPlot(abundance,metNames,'[mg/gDW]','r',25,1400,std)
+    barPlot(abundance,metNames,'[mg/gDW]','r',25,1400,std);
     
 end
 rmpath('../data')

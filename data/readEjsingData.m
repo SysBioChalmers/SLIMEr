@@ -42,15 +42,15 @@ end
 data.metNames  = data.metNames(MWs > 0);
 data.abundance = data.abundance(MWs > 0)/100;           %mol(lipid i)/mol(tot lipid)
 data.std       = data.std(MWs > 0)/100;                 %mol(lipid i)/mol(tot lipid)
-% MWs            = MWs(MWs > 0);
-% lipidContent   = 0.08;                                  %g(tot lipid)/gDW
-% lipidContent   = lipidContent*sum(data.abundance);      %g(tot lipid)/gDW, corrected
-% data.std       = data.std.*MWs;                         %g(lipid i)/mol(tot lipid)
-% data.abundance = data.abundance.*MWs;                  	%g(lipid i)/mol(tot lipid)
-% data.std       = data.std/sum(data.abundance);          %g(lipid i)/g(tot lipid)
-% data.abundance = data.abundance/sum(data.abundance);	%g(lipid i)/g(tot lipid)
-% data.std       = data.std*lipidContent;                 %g(lipid i)/gDW, corrected
-% data.abundance = data.abundance*lipidContent;           %g(lipid i)/gDW, corrected
+MWs            = MWs(MWs > 0);
+lipidContent   = 0.08;                                  %g(tot lipid)/gDW
+lipidContent   = lipidContent*sum(data.abundance);      %g(tot lipid)/gDW, corrected
+data.std       = data.std.*MWs;                         %g(lipid i)/mol(tot lipid)
+data.abundance = data.abundance.*MWs;                  	%g(lipid i)/mol(tot lipid)
+data.std       = data.std/sum(data.abundance);          %g(lipid i)/g(tot lipid)
+data.abundance = data.abundance/sum(data.abundance);	%g(lipid i)/g(tot lipid)
+data.std       = data.std*lipidContent;                 %g(lipid i)/gDW, corrected
+data.abundance = data.abundance*lipidContent;           %g(lipid i)/gDW, corrected
 
 end
 
