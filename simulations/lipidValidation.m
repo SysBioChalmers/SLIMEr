@@ -15,11 +15,11 @@ for i = 1:length(data)
         
     %Filter out ergosterol:
     metNames  = data.metNames(1:end-1);
-    abundance = data.abundance(1:end-1);
-    std       = data.std(1:end-1);
+    abundance = data.abundance(1:end-1)*1000;   %mg/gDW
+    std       = data.std(1:end-1)*1000;         %mg/gDW
     
     %Plot data:
-    barPlot(abundance,metNames,'[% g/gDW]','r',20,1400,std)
+    barPlot(abundance,metNames,'[mg/gDW]','r',25,1400,std)
     
 end
 rmpath('../data')
