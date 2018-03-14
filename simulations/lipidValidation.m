@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % lipidValidation
 %
-% Benjamín J. Sánchez. Last update: 2018-03-06
+% Benjamín J. Sánchez. Last update: 2018-03-14
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Get experimental data for each condition:
@@ -11,7 +11,7 @@ addpath('../models')
 data = cell(1,8);
 for i = 1:length(data)
     %Read data:
-    data = readEjsingData(i);
+    data = readEjsingData(i,model);
         
     %Filter out ergosterol:
     metNames  = data.metNames(1:end-1);
@@ -19,7 +19,7 @@ for i = 1:length(data)
     std       = data.std(1:end-1);
     
     %Plot data:
-    barPlot(abundance,metNames,'[% mol/mol]','r',20,1400,std)
+    barPlot(abundance,metNames,'[% g/gDW]','r',20,1400,std)
     
 end
 rmpath('../data')
