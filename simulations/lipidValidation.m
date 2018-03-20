@@ -11,8 +11,9 @@ addpath('../models')
 data = cell(1,8);
 for i = 1:length(data)
     %Read data:
-    data = readEjsingData(i,model);
-        
+    data = readEjsingData(i);
+    data = convertEjsingData(data,model);
+    
     %Filter out ergosterol:
     metNames  = data.metNames(1:end-1);
     abundance = data.abundance(1:end-1)*1000;   %mg/gDW
