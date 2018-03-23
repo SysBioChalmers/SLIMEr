@@ -8,9 +8,9 @@
 close all
 addpath('../data')
 addpath('../models')
-data = cell(size(model_correctedComp));
-old  = cell(size(model_correctedComp));
-new  = cell(size(model_correctedComp));
+data = cell(size(model_corrComp));
+old  = cell(size(model_corrComp));
+new  = cell(size(model_corrComp));
 for i = 1:length(data)
     %Read and modify data:
     data{i}    = readLahtveeData(i);
@@ -23,7 +23,7 @@ for i = 1:length(data)
     new{i} = getLipidDistribution(model_SLIMEr{i},lipidNames,chains,data{i}.fluxData);
     data{i}.fluxData.averages(1) = new{i}.vgluc;
     data{i}.fluxData.stdevs(1)   = 0;
-    old{i} = getLipidDistribution(model_correctedComp{i},lipidNames,chains,data{i}.fluxData);
+    old{i} = getLipidDistribution(model_corrComp{i},lipidNames,chains,data{i}.fluxData);
 end
 
 %1. Exp data: lipid classes
