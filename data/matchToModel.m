@@ -1,10 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % pos = matchToModel(model,metName)
 %
-% Benjamín J. Sánchez. Last update: 2018-03-14
+% Benjamín J. Sánchez. Last update: 2018-03-23
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function pos = matchToModel(model,metName)
+function [pos,backbone] = matchToModel(model,metName)
 
 %Translating codes to names in model:
 codes = {'TAG'          'triglyceride'                                      'endoplasmic reticulum membrane'
@@ -27,12 +27,16 @@ codes = {'TAG'          'triglyceride'                                      'end
          'M(IP)2C'      'inositol phosphomannosylinositol phosphoceramide'  'Golgi'
          'Ergosterol'   'ergosterol'                                        'cytoplasm'};
 
-pos = false(size(model.mets));
+pos      = false(size(model.mets));
+backbone = '';
 if contains(metName,'LCB') || contains(metName,'Ergost')
     %Direct match (LCB 18:0;2, LCB 18:0;3, LCBP 18:0;2, LCBP 18:0;3, Ergosterol):
     codesPos = strcmp(codes(:,1),metName);
-    metName  = [codes{codesPos,2} ' [' codes{codesPos,3} ']'];
-    pos      = strcmp(model.metNames,metName);
+    if sum(codesPos) > 0
+        backbone = codes{codesPos,2};
+        metName  = [backbone ' [' codes{codesPos,3} ']'];
+        pos      = strcmp(model.metNames,metName);
+    end
 else
     %Split in backbone and tails:
     parts    = strsplit(metName,' ');
@@ -41,7 +45,7 @@ else
         
     %Get full backbone and compartment name:
     codesPos = strcmp(codes(:,1),backCode);
-    backName = codes{codesPos,2};
+    backbone = codes{codesPos,2};
     compName = codes{codesPos,3};
         
     %Find tails and act accordingly:
@@ -52,8 +56,13 @@ else
             tailOptions = perms(tails);
             [m,n]       = size(tailOptions);
             for i = 1:m
-                tail_i      = strcat(num2str((1:n)'),'-',tailOptions(i,:)');
-                metName     = [backName ' (' strjoin(tail_i,', ') ') [' compName ']'];
+                if strcmp(backCode,'LPI')
+                    tail_i = tailOptions(1);
+                else
+                    tail_i = strcat(num2str((1:n)'),'-',tailOptions(i,:)');
+                end
+                
+                metName     = [backbone ' (' strjoin(tail_i,', ') ') [' compName ']'];
                 metPos      = strcmp(model.metNames,metName);
                 pos(metPos) = true;
             end
@@ -67,9 +76,9 @@ else
             shortTail = tails{1}(end);
             longTail  = tails{2}(end);
             posSphing = strcmp(sphingos(:,3),shortTail).*strcmp(sphingos(:,4),longTail) == 1;
-            metName   = [backName '-' sphingos{posSphing,1} ' (C' tails{2}(1:2) ') [' compName ']'];    %Cer
+            metName   = [backbone '-' sphingos{posSphing,1} ' (C' tails{2}(1:2) ') [' compName ']'];    %Cer
             if sum(strcmp(model.metNames,metName)) == 0
-                metName = [backName ' ' sphingos{posSphing,2} ' (C' tails{2}(1:2) ') [' compName ']'];  %IPC, MIPC & M(IP)2C
+                metName = [backbone ' ' sphingos{posSphing,2} ' (C' tails{2}(1:2) ') [' compName ']'];  %IPC, MIPC & M(IP)2C
             end
             pos = strcmp(model.metNames,metName);
     end

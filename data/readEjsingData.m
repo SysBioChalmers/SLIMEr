@@ -1,10 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% data = readEjsingData(i,model)
+% data = readEjsingData(i)
 %
-% Benjamín J. Sánchez. Last update: 2018-03-14
+% Benjamín J. Sánchez. Last update: 2018-03-20
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function data = readEjsingData(i,model)
+function data = readEjsingData(i)
 
 %Load data:
 fid            = fopen('fullData_Ejsing2009.csv');

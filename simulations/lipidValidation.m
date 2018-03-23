@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % lipidValidation
 %
-% Benjamín J. Sánchez. Last update: 2018-03-14
+% Benjamín J. Sánchez. Last update: 2018-03-20
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Get experimental data for each condition:
@@ -12,7 +12,7 @@ data = cell(1,8);
 for i = 1:length(data)
     %Read data:
     data = readEjsingData(i);
-    data = convertEjsingData(data,model);
+    data = convertEjsingData(data,model,false);
     
     %Filter out ergosterol:
     metNames  = data.metNames(1:end-1);
