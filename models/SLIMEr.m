@@ -1,12 +1,23 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % model = SLIMEr(model,data,includeTails)
 %
-% Benjamín J. Sánchez. Last update: 2018-03-05
+% Benjamín J. Sánchez. Last update: 2018-03-23
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function model = SLIMEr(model,data,includeTails)
 
-%Add new metabolites:
+%Add new backbones (if any):
+metIDs = cell(size(data.lipidData.metNames));
+for i = 1:length(data.lipidData.metNames)
+    metName = [data.lipidData.metNames{i} ' [cytoplasm]'];
+    if ~ismember(metName,model.metNames)
+        model = addLipidSpecies(model,metName,'',false);
+    end
+    metIDs{i} = model.metNames{strcmp(model.metNames,metName)};
+end
+data.lipidData.metIDs = metIDs;
+
+%Add chains:
 for i = 1:length(data.chainData.metNames)
     metName = [data.chainData.metNames{i} ' [cytoplasm]'];
     model   = addLipidSpecies(model,metName,data.chainData.formulas{i},~includeTails);

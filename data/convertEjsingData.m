@@ -96,9 +96,6 @@ for i = 1:length(data.metNames)
     data.abundance(i) = sum(data_old.abundance.*hits);
     data.std(i)       = mean(data_old.std.*hits);
 end
-% data.lipidData.metAbbrev = lipidData{1};
-% data.lipidData.metIDs    = lipidData{3};
-% later bug: define what to rescale
 
 end
 
