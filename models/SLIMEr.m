@@ -1,19 +1,48 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % model = SLIMEr(model,data,includeTails)
 %
-% Benjamín J. Sánchez. Last update: 2018-03-23
+% Benjamín J. Sánchez. Last update: 2018-03-24
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function model = SLIMEr(model,data,includeTails)
 
-%Add new backbones (if any):
+%Add new backbones:
+metIDs   = model.mets;
+metNames = model.metNames;
+for i = 1:length(metIDs)
+    backName = getBackboneName(metNames{i});
+    if ~isempty(backName)
+        if ~ismember(backName,model.metNames)
+            model = addLipidSpecies(model,backName,'',false);
+        end
+        %Add transport rxn to cytoplasm for non cytoplasmic backbones:
+        if ~contains(backName,'cytoplasm')
+            cytoName = [backName(1:strfind(backName,'[')) 'cytoplasm]'];
+            if ~ismember(cytoName,model.metNames)
+                model = addLipidSpecies(model,cytoName,'',false);
+            end
+            backID    = model.mets(strcmp(model.metNames,backName));
+            cytoID    = model.mets(strcmp(model.metNames,cytoName));
+            transID   = ['r_' getNewIndex(model.rxns)];
+            transName = [backName(1:strfind(backName,'[')-1) 'transport'];
+            model     = addReaction(model,transID, ...
+                                    'reactionName', transName, ...
+                                    'metaboliteList', [backID,cytoID], ...
+                                    'stoichCoeffList', [-1,+1], ...
+                                    'reversible', false, ...
+                                    'lowerBound', 0, ...
+                                    'upperBound', 1000, ...
+                                    'checkDuplicate', true);
+            printRxnFormula(model,transID,true,true,true);
+        end
+    end
+end
+
+%Get backbone IDs:
 metIDs = cell(size(data.lipidData.metNames));
 for i = 1:length(data.lipidData.metNames)
-    metName = [data.lipidData.metNames{i} ' [cytoplasm]'];
-    if ~ismember(metName,model.metNames)
-        model = addLipidSpecies(model,metName,'',false);
-    end
-    metIDs{i} = model.metNames{strcmp(model.metNames,metName)};
+    metName   = [data.lipidData.metNames{i} ' [cytoplasm]'];
+    metIDs{i} = model.mets{strcmp(model.metNames,metName)};
 end
 data.lipidData.metIDs = metIDs;
 
@@ -89,6 +118,9 @@ model.S(H2Opos,bioRxn) = -GAM;
 model.S(ADPpos,bioRxn) = +GAM;
 model.S(Hpos,bioRxn)   = +GAM;
 model.S(Ppos,bioRxn)   = +GAM;
+
+%Remove wrongly created field:
+model = rmfield(model,'grRules');
 
 end
 

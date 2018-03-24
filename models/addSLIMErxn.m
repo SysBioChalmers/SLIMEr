@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % [model,toDelete] = addSLIMErxn(model,rxnID,specID)
 %
-% Benjamín J. Sánchez. Last update: 2018-03-05
+% Benjamín J. Sánchez. Last update: 2018-03-24
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [model,toDelete] = addSLIMErxn(model,rxnID,specID)
@@ -32,12 +32,8 @@ if isempty(backName)
     disp('removing')    %dolichol and any other weird ISA rxn
     toDelete = true;
     return
-elseif sum(backPos) > 0
-    backID = model.mets{backPos};       %backbone already exists
 else
-    model   = addLipidSpecies(model,backName,'',false); %add formula later
-    backPos = strcmp(model.metNames,backName);
-    backID  = model.mets{backPos};
+    backID = model.mets{backPos};       %backbone already exists
 end
 backName = backName(1:strfind(backName,'[')-2);
 specName = specName(1:strfind(specName,'[')-2);
@@ -46,7 +42,7 @@ specName = specName(1:strfind(specName,'[')-2);
 specMW = getMWfromFormula(model.metFormulas(specPos));
 
 %Define number of tails to add:
-switch backName       
+switch backName
     %Cases with format '(1-XX:Y, 2-XX:Y, ...)':
     case {'1-phosphatidyl-1D-myo-inositol'                      %PI
           'sn-2-acyl-1-lysophosphatidylinositol'                %LPI
@@ -97,10 +93,10 @@ switch backName
                    'sphinganine 1-phosphate'        'C18:0'     %LCBP
                    'phytosphingosine 1-phosphate'	'C18:0'};   %LCBP
         tailsRxn = species(strcmp(species(:,1),specName),2);
-        
-    %No tails added (for dolichol & "complex sphingolipid"):    
-    otherwise
-        error('smth went wrong')
+    
+    %No SLIME rxns needed for ergosterol:
+    case 'ergosterol'
+        return
 end
 
 %Find tail metabolites in model:
@@ -127,9 +123,7 @@ model = addReaction(model,rxnID, ...
                     'upperBound', 1000, ...
                     'checkDuplicate', true);
 
-%Remove wrongly created field:
 try
-    model = rmfield(model,'grRules');
     printRxnFormula(model,rxnID,true,true,true);
 catch
     disp(['Repeated: ' rxnName])
