@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % backName = getBackboneName(specName)
 %
-% Benjamín J. Sánchez. Last update: 2018-03-05
+% Benjamín J. Sánchez. Last update: 2018-03-24
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function backName = getBackboneName(specName)
@@ -37,6 +37,7 @@ group2 = {'palmitate'                       'fatty acid'                'cytopla
           'palmitoleate'                    'fatty acid'                'cytoplasm'
           'stearate'                        'fatty acid'                'cytoplasm'
           'oleate'                          'fatty acid'                'cytoplasm'
+          'ergosterol'                      'ergosterol'                'cytoplasm'
           'ergosteryl palmitoleate'         'ergosterol ester'          'endoplasmic reticulum membrane'
           'ergosteryl oleate'               'ergosterol ester'          'endoplasmic reticulum membrane'
           'sphinganine'                     'long-chain base'           'endoplasmic reticulum'
