@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % model = changeLipidComp(model,lipidData)
 %
-% Benjamín J. Sánchez. Last update: 2017-12-01
+% Benjamín J. Sánchez. Last update: 2018-03-24
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function model = changeLipidComp(model,lipidData)
@@ -21,14 +21,13 @@ else
 end
 
 %Create lipid pseudo-rxn for backbones (or modify normal one):
-model = addReaction(model, ...                      %model
-                    {rxnID,rxnName}, ...            %rxn
-                    [lipidData.metIDs;metID], ...   %metabolites
-                    [-lipidData.abundance;1], ...   %stoichiometry
-                    false, ...                      %reversibility
-                    0, ...                          %LB
-                    1000, ...                       %UB
-                    0);                             %c
+model = addReaction(model, rxnID, ...
+                    'reactionName', rxnName, ...
+                    'metaboliteList', [lipidData.metIDs;metID], ...
+                    'stoichCoeffList', [-lipidData.abundance;1], ...
+                    'reversible', false, ...
+                    'lowerBound', 0, ...
+                    'upperBound', 1000);
 printRxnFormula(model,rxnID,true,true,true);
 
 end

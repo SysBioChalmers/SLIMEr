@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % model = changeChainComp(model,chainData)
 %
-% Benjamín J. Sánchez. Last update: 2017-12-01
+% Benjamín J. Sánchez. Last update: 2018-03-24
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function model = changeChainComp(model,chainData)
@@ -22,14 +22,14 @@ tailPos = strcmp(model.metNames,'lipid - tails [cytoplasm]');
 tailID  = model.mets(tailPos);
 
 %Add lipid pseudo-rxn for tails:
-model = addReaction(model, ...                      %model
-                    {rxnID,rxnName}, ...            %rxn
-                    [tailIDs;tailID], ...           %metabolites
-                    [-chainData.abundance;1], ...   %stoichiometry
-                    false, ...                      %reversibility
-                    0, ...                          %LB
-                    1000, ...                       %UB
-                    0);                             %c
+model = addReaction(model, rxnID, ...
+                    'reactionName', rxnName, ...
+                    'metaboliteList', [tailIDs;tailID], ...
+                    'stoichCoeffList', [-chainData.abundance;1], ...
+                    'reversible', false, ...
+                    'lowerBound', 0, ...
+                    'upperBound', 1000);
+                
 printRxnFormula(model,rxnID,true,true,true);
 
 end

@@ -68,15 +68,14 @@ else
     coeffs = [-1,    +1];
 end
 rxnName = 'lipid pseudoreaction - merge';
-model   = addReaction(model, ...                    %model
-                      {'r_2108',rxnName}, ...       %rxn
-                      mets, ...                     %metabolites
-                      coeffs, ...                   %stoichiometry
-                      false, ...                    %reversibility
-                      0, ...                        %LB
-                      1000, ...                     %UB
-                      0);                           %c
-
+model   = addReaction(model, 'r_2108', ...
+                      'reactionName', rxnName, ...
+                      'metaboliteList', mets, ...
+                      'stoichCoeffList', coeffs, ...
+                      'reversible', false, ...
+                      'lowerBound', 0, ...
+                      'upperBound', 1000);
+                  
 %Remove GAM requirement:
 GAM    = 0;
 bioRxn = strcmp(model.rxnNames,'yeast 8 biomass pseudoreaction');
