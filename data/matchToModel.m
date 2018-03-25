@@ -1,10 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % pos = matchToModel(model,metName)
 %
-% Benjamín J. Sánchez. Last update: 2018-03-23
+% Benjamín J. Sánchez. Last update: 2018-03-25
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [pos,backbone] = matchToModel(model,metName)
+function pos = matchToModel(model,metName)
 
 %Translating codes to names in model:
 codes = {'TAG'          'triglyceride'                                      'endoplasmic reticulum membrane'
@@ -27,8 +27,7 @@ codes = {'TAG'          'triglyceride'                                      'end
          'M(IP)2C'      'inositol phosphomannosylinositol phosphoceramide'  'Golgi'
          'Ergosterol'   'ergosterol'                                        'cytoplasm'};
 
-pos      = false(size(model.mets));
-backbone = '';
+pos = false(size(model.mets));
 if contains(metName,'LCB') || contains(metName,'Ergost')
     %Direct match (LCB 18:0;2, LCB 18:0;3, LCBP 18:0;2, LCBP 18:0;3, Ergosterol):
     codesPos = strcmp(codes(:,1),metName);

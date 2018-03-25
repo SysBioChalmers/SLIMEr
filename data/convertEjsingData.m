@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % data = convertEjsingData(data,model,condense)
 %
-% Benjamín J. Sánchez. Last update: 2018-03-23
+% Benjamín J. Sánchez. Last update: 2018-03-25
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function data = convertEjsingData(data_old,model,condense)
@@ -10,10 +10,13 @@ function data = convertEjsingData(data_old,model,condense)
 MWs        = zeros(size(data_old.metNames));
 backbones  = cell(size(data_old.metNames));
 for i = 1:length(data_old.metNames)
-    [pos,backbones{i}] = matchToModel(model,data_old.metNames{i});
+    pos = matchToModel(model,data_old.metNames{i});
     if sum(pos) > 0
-        MWi    = getMWfromFormula(model.metFormulas(pos));
-        MWs(i) = mean(MWi);
+        MWi          = getMWfromFormula(model.metFormulas(pos));
+        MWs(i)       = mean(MWi);
+        backbone     = model.metNames(pos);
+        backbones{i} = getBackboneName(backbone{1});
+        backbones{i} = backbones{i}(1:strfind(backbones{i},'[')-2);
     end
 end
 
