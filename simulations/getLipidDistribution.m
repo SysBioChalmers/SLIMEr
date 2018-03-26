@@ -22,7 +22,7 @@ end
 composition = zeros(length(lipidNames),length(chains));
 
 %Go through all SLIME rxns to find abundances:
-SLIMEpos = find(contains(model.rxnNames,'SLIME rxn');
+SLIMEpos = find(contains(model.rxnNames,'SLIME rxn'));
 for i = 1:length(SLIMEpos)
     %Find flux and all metabolites produced in each SLIME rxn:
     flux      = sol.x(SLIMEpos(i));
