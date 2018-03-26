@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % data = convertEjsingData(data,model,condense)
 %
-% Benjamín J. Sánchez. Last update: 2018-03-25
+% Benjamín J. Sánchez. Last update: 2018-03-26
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function data = convertEjsingData(data_old,model,condense)
@@ -51,6 +51,13 @@ else
     %Only change units to g/gDW:
     data = changeUnits(data_old,MWs);
 end
+
+%Add missing data: composition and fluxes
+data.otherData.metIDs    = {'protein';'RNA'};
+data.otherData.abundance = [0.5;0.06];              %Average values from literature
+data.fluxData.rxnIDs     = {'r_1714';'r_2111'};     %Glucose & biomass
+data.fluxData.averages   = [-20.4;0.41];            %Estimated by ecYeast7
+data.fluxData.stdevs     = [20.4;0.41]*0.01;        %Assume 1% error in measurement
 
 end
 
