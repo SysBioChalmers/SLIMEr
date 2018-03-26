@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % data = getLipidDistribution(model,lipidNames,chains,fluxData)
 %
-% Benjamín J. Sánchez. Last update: 2018-01-12
+% Benjamín J. Sánchez. Last update: 2018-03-26
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function data = getLipidDistribution(model,lipidNames,chains,fluxData)
@@ -22,7 +22,7 @@ end
 composition = zeros(length(lipidNames),length(chains));
 
 %Go through all SLIME rxns to find abundances:
-SLIMEpos = find(~cellfun(@isempty,strfind(model.rxnNames,'SLIME rxn')));
+SLIMEpos = find(contains(model.rxnNames,'SLIME rxn');
 for i = 1:length(SLIMEpos)
     %Find flux and all metabolites produced in each SLIME rxn:
     flux      = sol.x(SLIMEpos(i));
@@ -33,7 +33,7 @@ for i = 1:length(SLIMEpos)
     %Find lipid species:
     pos_i = [];
     for j = 1:length(lipidNames)
-        lipidPos = ~cellfun(@isempty,strfind(model.metNames(metPos),lipidNames{j}));
+        lipidPos = contains(model.metNames(metPos),lipidNames{j});
         if sum(lipidPos) > 0
             pos_i = j;
         end
