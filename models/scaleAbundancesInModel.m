@@ -9,7 +9,6 @@ function [model,k] = scaleAbundancesInModel(model,data,scaling)
 %Find optimal scaling factor:
 k0   = 1;
 kOpt = fminsearch(@(k)unusedLipid(k,model,data,scaling),k0);
-save('temp.mat','model','data','kOpt')
 
 %Find optimality range:
 krange(1) = fminsearch(@(k) +minScaling(k,model,data,scaling,kOpt),kOpt);
@@ -19,7 +18,7 @@ disp(['Optimality range: k = [ ' num2str(krange(1)) ' , ' num2str(krange(2)) ' ]
 %Scale with the average of the range:
 k     = mean(krange);
 model = adjustModel(model,k,true,scaling);
-disp(['Scaled lipid data in model: k = ' num2str(k)])
+disp(['Scaled ' scaling(1:end-1) ' data in model: k = ' num2str(k)])
 
 end
 
