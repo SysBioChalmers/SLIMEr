@@ -25,7 +25,7 @@ backbones          = backbones(MWs > 0);
 data_old.metNames  = data_old.metNames(MWs > 0);
 data_old.abundance = data_old.abundance(MWs > 0)/100;	%mol(lipid i)/mol(tot lipid)
 data_old.std       = data_old.std(MWs > 0)/100;         %mol(lipid i)/mol(tot lipid)
-MWs                = MWs(MWs > 0);
+MWs                = MWs(MWs > 0)*1000;                 %g/mol
 
 if condense
     %Backbones: First convert to g/gDW and then add up
@@ -65,9 +65,10 @@ end
 
 function data = changeUnits(data,MWs)
 
+lipidContent = 0.08;                                  %g(tot lipid)/gDW
+lipidContent = lipidContent*sum(data.abundance);      %g(tot lipid)/gDW, corrected
+
 %Transform units to abundance (assuming 8% of total lipid)
-lipidContent   = 0.08;                                  %g(tot lipid)/gDW
-lipidContent   = lipidContent*sum(data.abundance);      %g(tot lipid)/gDW, corrected
 data.std       = data.std.*MWs;                         %g(lipid i)/mol(tot lipid)
 data.abundance = data.abundance.*MWs;                  	%g(lipid i)/mol(tot lipid)
 data.std       = data.std/sum(data.abundance);          %g(lipid i)/g(tot lipid)

@@ -1,7 +1,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % MWs = getMWfromFormula(metFormulas)
+% Returns the MW (in g/mmol) of a chemical formula
 %
-% Benjamín J. Sánchez. Last update: 2017-11-30
+% Benjamín J. Sánchez. Last update: 2018-03-26
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function MWs = getMWfromFormula(metFormulas)
