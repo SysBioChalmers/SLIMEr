@@ -1,41 +1,36 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% [model,k] = scaleAbundancesInModel(model,data)
+% [model,k] = scaleAbundancesInModel(model,data,scaling)
 %
-% Benjamín J. Sánchez. Last update: 2018-01-12
+% Benjamín J. Sánchez. Last update: 2018-03-26
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [model,k] = scaleAbundancesInModel(model,data)
+function [model,k] = scaleAbundancesInModel(model,data,scaling)
 
 %Find optimal scaling factor:
-save('temp.mat','model','data')
 k0   = 1;
-kOpt = fminsearch(@unusedLipid,k0);
+kOpt = fminsearch(@(k)unusedLipid(k,model,data,scaling),k0);
 save('temp.mat','model','data','kOpt')
 
 %Find optimality range:
-krange(1) = fminsearch(@(x) +minScaling(x),kOpt);
-krange(2) = fminsearch(@(x) -minScaling(x),kOpt);
+krange(1) = fminsearch(@(k) +minScaling(k,model,data,scaling,kOpt),kOpt);
+krange(2) = fminsearch(@(k) -minScaling(k,model,data,scaling,kOpt),kOpt);
 disp(['Optimality range: k = [ ' num2str(krange(1)) ' , ' num2str(krange(2)) ' ]'])
 
 %Scale with the average of the range:
 k     = mean(krange);
-model = adjustModel(model,k,true);
+model = adjustModel(model,k,true,scaling);
 disp(['Scaled lipid data in model: k = ' num2str(k)])
-delete('temp.mat')
 
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function exchange = unusedLipid(k)
+function exchange = unusedLipid(k,model,data,scaling)
 
-%Load model and adjust stoich coeffs of the tail pseudo-rxn:
-temp  = load('temp.mat');
-model = temp.model;
-model = adjustModel(model,k,false);
+%Adjust stoich coeffs of the corresponding pseudo-rxn:
+model = adjustModel(model,k,false,scaling);
 
 %Optimize model:
-data    = temp.data;
 try
     [sol,~] = simulateGrowth(model,data.fluxData);
 catch
@@ -53,22 +48,19 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function k = minScaling(k)
+function k = minScaling(k,model,data,scaling,kOpt)
 
-%Load model and adjust stoich coeffs of the tail pseudo-rxn:
-temp  = load('temp.mat');
-model = temp.model;
-model = adjustModel(model,k,true);
+%Adjust stoich coeffs of the corresponding pseudo-rxn:
+model = adjustModel(model,k,true,scaling);
 
 %Optimize model:
-data = temp.data;
 try
     [sol,~] = simulateGrowth(model,data.fluxData);
     posNGAM = strcmp(model.rxnNames,'non-growth associated maintenance reaction');
     disp(['Finding scaling range: k = ' num2str(k) ' -> Maintenance = ' num2str(sol.x(posNGAM))])
 catch
     disp(['Finding scaling range: k = ' num2str(k) ' -> Maintenance = ' num2str(0)])
-    k = temp.kOpt;  %any unfeasible simulation returns the original value
+    k = kOpt;  %any unfeasible simulation returns the original value
 end
 
 end

@@ -1,10 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% [model_corrComp,model_SLIMEr,k,GAMpol] = modelsFromData(model,data)
+% [model_corrComp,model_SLIMEr,k,GAMpol] = modelsFromData(model,data,scaling)
 %
-% Benjamín J. Sánchez. Last update: 2018-03-23
+% Benjamín J. Sánchez. Last update: 2018-03-24
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [model_corrComp,model_SLIMEr,k,GAMpol] = modelsFromData(model,data)
+function [model_corrComp,model_SLIMEr,k,GAMpol] = modelsFromData(model,data,scaling)
 
 %Model with lipid composition corrected:
 model_corrComp = SLIMEr(model,data,false);
@@ -13,8 +13,8 @@ model_corrComp = SLIMEr(model,data,false);
 model_SLIMEr = SLIMEr(model,data,true);
 
 %Make abundances be consistent:
-[model_SLIMEr,k] = scaleAbundancesInModel(model_SLIMEr,data);
-model_corrComp   = adjustModel(model_corrComp,k,false);
+[model_SLIMEr,k] = scaleAbundancesInModel(model_SLIMEr,data,scaling);
+model_corrComp   = adjustModel(model_corrComp,k,false,scaling);
 
 %Correct the rest of the composition to be consistent:
 [model_corrComp,~]    = changeOtherComp(model_corrComp,data);

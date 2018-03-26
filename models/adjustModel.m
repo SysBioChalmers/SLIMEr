@@ -1,10 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% model = adjustModel(model,k,block)
+% model = adjustModel(model,k,block,scaling)
 %
-% Benjamín J. Sánchez. Last update: 2017-12-13
+% Benjamín J. Sánchez. Last update: 2018-03-25
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function model = adjustModel(model,k,block)
+function model = adjustModel(model,k,block,scaling)
 
 %Block exchange of tails and backbones:
 if block
@@ -14,12 +14,20 @@ if block
     model = changeRxnBounds(model,model.rxns(posB),0,'b');
 end
 
-%Find positions:
-backRxn  = strcmp(model.rxnNames,'lipid pseudoreaction - backbone');
-backMets = model.S(:,backRxn) < 0;
+%Switch what to rescale depending on flag:
+switch scaling
+    case 'backbones'
+        rxnName = 'lipid pseudoreaction - backbone';
+    case 'tails'
+        rxnName = 'lipid pseudoreaction - tail';
+end
 
-%Chain stoich coeffs:
-model.S(backMets,backRxn) = k*model.S(backMets,backRxn);
+%Find positions:
+scaleRxn  = strcmp(model.rxnNames,rxnName);
+scaleMets = model.S(:,scaleRxn) < 0;
+
+%Change stoich coeffs:
+model.S(scaleMets,scaleRxn) = k*model.S(scaleMets,scaleRxn);
 
 end
 
