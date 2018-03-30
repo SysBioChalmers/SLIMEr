@@ -8,41 +8,61 @@
 % D -> DNA fraction [g/gDW]
 % L -> Lipid fraction [g/gDW]
 %
-% Benjamín J. Sánchez. Last update: 2018-01-19
+% Benjamín J. Sánchez. Last update: 2018-03-30
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [X,P,C,R,D,L] = sumBioMass(model,comps)
 
+%Get main fractions:
+[P,X] = getFraction(model,comps,'P',0);
+[C,X] = getFraction(model,comps,'C',X);
+[R,X] = getFraction(model,comps,'R',X);
+[D,X] = getFraction(model,comps,'D',X);
+[L,X] = getFraction(model,comps,'L',X);
+
+%Add up any remaining components:
 bioPos = strcmp(model.rxns,'r_4041');
-X      = 0;
-P      = 0;
-C      = 0;
-R      = 0;
-D      = 0;
 for i = 1:length(model.mets)
     pos = strcmp(comps(:,1),model.mets{i});
     if sum(pos) == 1
         abundance = -model.S(i,bioPos)*comps{pos,2}/1000;
-        X = X + abundance;
-        if strcmp(comps{pos,3},'P')
-            P = P + abundance;
-        elseif strcmp(comps{pos,3},'C')
-            C = C + abundance;
-        elseif strcmp(comps{pos,3},'R')
-            R = R + abundance;
-        elseif strcmp(comps{pos,3},'D')
-            D = D + abundance;
-        end
+        X         = X + abundance;
     end
 end
 
-lipidPos = strcmp(model.rxnNames,'lipid pseudoreaction - backbone');
-if sum(lipidPos) == 0
-    lipidPos = strcmp(model.rxnNames,'lipid pseudoreaction');
 end
-subs  = model.S(:,lipidPos) < 0;        %substrates in lipid pseudo-rxn
-L     = -sum(model.S(subs,lipidPos));   %lipid composition
-X     = X + L;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function [F,X] = getFraction(model,comps,compType,X)
+
+%Define pseudoreaction name:
+rxnName = [compType ' pseudoreaction'];
+rxnName = strrep(rxnName,'P','protein');
+rxnName = strrep(rxnName,'C','carbohydrate');
+rxnName = strrep(rxnName,'R','RNA');
+rxnName = strrep(rxnName,'D','DNA');
+rxnName = strrep(rxnName,'L','lipid');
+
+%Add up fraction:
+if contains(rxnName,'lipid')
+    fractionPos = strcmp(model.rxnNames,[rxnName ' - backbone']);
+    subs        = model.S(:,fractionPos) < 0;        %substrates in pseudo-rxn
+    F           = -sum(model.S(subs,fractionPos));   %g/gDW
+else
+    fractionPos = strcmp(model.rxnNames,rxnName);
+    comps = comps(strcmp(comps(:,3),compType),:);
+    F = 0;
+    %Add up all components:
+    for i = 1:length(model.mets)
+        pos = strcmp(comps(:,1),model.mets{i});
+        if sum(pos) == 1
+            abundance = -model.S(i,fractionPos)*comps{pos,2}/1000;
+            F         = F + abundance;
+        end
+    end
+end
+X = X + F;
 
 end
 

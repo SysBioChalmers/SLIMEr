@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % [model,GAMpol] = changeOtherComp(model,data)
 %
-% Benjamín J. Sánchez. Last update: 2018-01-19
+% Benjamín J. Sánchez. Last update: 2018-03-30
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [model,GAMpol] = changeOtherComp(model,data)
@@ -50,25 +50,33 @@ comps = {'s_0404[c]'	89.09       'P'     % A     Alanine         ala
 
 %Change given abundances in model:
 [~,P,~,R,~,~] = sumBioMass(model,comps);
-bioPos        = strcmp(model.rxns,'r_4041');
+protPos       = strcmp(model.rxnNames,'protein pseudoreaction');
+rnaPos        = strcmp(model.rxnNames,'RNA pseudoreaction');
 for i = 1:length(otherData.metIDs)
     if strcmp(otherData.metIDs{i},'protein')
-        fP   = otherData.abundance(i)/P;                            %ratio to scale
-        isAA = ~cellfun(@isempty,strfind(model.metNames,'tRNA'));   %protein components
-        model.S(isAA,bioPos) = full(model.S(isAA,bioPos))*fP;
+        fP   = otherData.abundance(i)/P;       	%ratio to scale
+        isAA = contains(model.metNames,'tRNA');	%protein components
+        model.S(isAA,protPos) = full(model.S(isAA,protPos))*fP;
         
     elseif strcmp(otherData.metIDs{i},'RNA')
         fR    = otherData.abundance(i)/R;           %ratio to scale
         nucs  = comps(strcmp(comps(:,3),'R'),1);    %RNA components
         for j = 1:length(nucs)
             modelPos = strcmp(model.mets,nucs{j});
-            model.S(modelPos,bioPos) = full(model.S(modelPos,bioPos))*fR;
+            model.S(modelPos,rnaPos) = full(model.S(modelPos,rnaPos))*fR;
         end
         
     else
         modelPos = strcmp(model.mets,otherData.metIDs{i});
         compPos  = strcmp(comps(:,1),otherData.metIDs{i});
-        model.S(modelPos,bioPos) = -otherData.abundance(i)/comps{compPos,2}*1000;
+        if strcmp(comps{compPos,3},'C')
+            rxnPos = strcmp(model.rxnNames,'carbohydrate pseudoreaction');
+        elseif strcmp(comps{compPos,3},'D')
+            rxnPos = strcmp(model.rxnNames,'DNA pseudoreaction');
+        elseif strcmp(comps{compPos,3},'N')
+            rxnPos = strcmp(model.rxnNames,'biomass pseudoreaction');
+        end
+        model.S(modelPos,rxnPos) = -otherData.abundance(i)/comps{compPos,2}*1000;
     end
 end
 
@@ -81,9 +89,10 @@ mets     = comps(strcmp(comps(:,3),'C'),1);
 massPre  = C;
 massPost = massPre - delta;
 fC       = massPost/massPre;
+carbPos  = strcmp(model.rxnNames,'carbohydrate pseudoreaction');
 for i = 1:length(mets)
     modelPos = strcmp(model.mets,mets{i});
-    model.S(modelPos,bioPos) = model.S(modelPos,bioPos)*fC;
+    model.S(modelPos,carbPos) = model.S(modelPos,carbPos)*fC;
 end
 
 %Estimate maintenance belonging to polymerization:
