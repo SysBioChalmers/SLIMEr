@@ -10,7 +10,7 @@ addpath('../data')
 addpath('../models')
 
 errors = zeros(length(model_corrComp_val),2);
-for i = 1%:length(model_corrComp_val)
+for i = 1:length(model_corrComp_val)
     %Read experimental data for each condition:
     data = readEjsingData(i);
     data = convertEjsingData(data,model,false);
