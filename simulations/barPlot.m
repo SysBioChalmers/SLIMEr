@@ -56,7 +56,8 @@ hold off
 
 %Shrink and rotate labels when there are too many:
 if length(names) > 40
-    xticklabel_rotate([],90,[],'Fontsize',text_size/2)
+    set(gca,'FontSize',text_size/2)
+    xtickangle(90)
 end
 
 end
