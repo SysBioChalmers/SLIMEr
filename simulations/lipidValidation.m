@@ -9,6 +9,10 @@ close all
 addpath('../data')
 addpath('../models')
 
+conds  = {'BY4741 wild type - 24ºC','BY4741 wild type - 37ºC', ...
+          'BY4741 \itelo1\rm\Delta - 24ºC','BY4741 \itelo1\rm\Delta - 37ºC', ...
+          'BY4741 \itelo2\rm\Delta - 24ºC','BY4741 \itelo2\rm\Delta - 37ºC', ...
+          'BY4741 \itelo3\rm\Delta - 24ºC','BY4741 \itelo3\rm\Delta - 37ºC'};
 errors = zeros(length(model_corrComp_val),2);
 for i = 1:length(model_corrComp_val)
     %Read experimental data for each condition:
@@ -33,9 +37,24 @@ for i = 1:length(model_corrComp_val)
     
     %Plot data:
     ymax = ceil(max(y)/5)*5;
-    barPlot(data.abundance,data.metNames,'[mg/gDW]','r',ymax,1400,data.std);
+    if i == 1
+        %Main figure:
+        xlength = 1400;
+        figure('position', [100,100,xlength,400])
+        barPlot(data.abundance,data.metNames,'[mg/gDW]','r',ymax,xlength,data.std);
+        hold on
+        scatter(x,y,10,'b','MarkerEdgeAlpha',.02)
+        hold off
+        figure('position', [100,100,xlength,600])
+    else
+        xlength = 1000;
+    end
+    %Supplementary figure:
+    subplot(length(model_corrComp_val),1,length(model_corrComp_val)+1-i)
+    barPlot(data.abundance,data.metNames,'[mg/gDW]','r',ymax,xlength,data.std);
     hold on
     scatter(x,y,10,'b','MarkerEdgeAlpha',.02)
+    text(80,ymax-5,conds{i})
     hold off
 end
 rmpath('../data')

@@ -1,16 +1,15 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % b = barPlot(data,names,units,color,ymax,xlength,std)
 %
-% Benjamín J. Sánchez. Last update: 2018-03-06
+% Benjamín J. Sánchez. Last update: 2018-04-02
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function b = barPlot(data,names,units,color,ymax,xlength,std)
 
 if nargin < 7
+    figure('position', [100,100,xlength,400])
     std = [];
 end
-
-figure('position', [100,100,xlength,400])
 hold on
 
 if isfield(data,'var')
@@ -56,8 +55,13 @@ hold off
 
 %Shrink and rotate labels when there are too many:
 if length(names) > 40
-    set(gca,'FontSize',text_size/2)
+    axis = gca;
+    set(axis,'FontSize',text_size/2)
     xtickangle(90)
+    axis.XAxis.TickLength = [0,0];
+    if xlength ~= 1400
+        set(axis,'XTick',[])
+    end
 end
 
 end
