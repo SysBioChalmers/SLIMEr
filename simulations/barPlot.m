@@ -43,7 +43,10 @@ end
 
 %Various options:
 text_size = 12;
-set(gca,'XTick',1:length(names),'XTickLabel',names)
+axis = gca;
+axis.XAxis.TickValues = 1:length(names);
+axis.XAxis.TickLabel  = names;
+axis.XAxis.TickLength = [0,0];
 set(gca,'FontSize',text_size)
 ylabel(['Abundance ' units],'FontSize',text_size);
 xlim([0.5,M+0.5])
@@ -55,10 +58,8 @@ hold off
 
 %Shrink and rotate labels when there are too many:
 if length(names) > 40
-    axis = gca;
     set(axis,'FontSize',text_size/2)
     xtickangle(90)
-    axis.XAxis.TickLength = [0,0];
     if xlength ~= 1400
         set(axis,'XTick',[])
     end
