@@ -69,11 +69,10 @@ toDelete = false(size(rxnIDs));
 for i = 1:length(rxnIDs)
     if contains(rxnNames{i},'isa ')
         [model,toDelete(i)] = addSLIMErxn(model,rxnIDs{i},[]);
+    elseif strcmp(rxnNames{i},'complex sphingolipid transport')
+        toDelete(i) = true;
     end
 end
-
-%Delete ISA rxns not used:
-model = removeRxns(model,rxnIDs(toDelete));
 
 %Add new SLIME reactions (with no corresponding ISA rxns):
 metIDs   = model.mets;
@@ -105,6 +104,9 @@ model   = addReaction(model, 'r_2108', ...
                       'lowerBound', 0, ...
                       'upperBound', 1000);
                   
+%Delete ISA rxns not used:
+model = removeRxns(model,rxnIDs(toDelete));
+
 %Remove GAM requirement:
 GAM    = 0;
 bioRxn = strcmp(model.rxnNames,'biomass pseudoreaction');
