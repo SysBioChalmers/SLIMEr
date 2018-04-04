@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % compareLipidDistributions
 %
-% Benjamín J. Sánchez. Last update: 2018-03-06
+% Benjamín J. Sánchez. Last update: 2018-04-04
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Get lipid distribution for each condition:
@@ -26,34 +26,26 @@ for i = 1:length(data)
     old{i} = getLipidDistribution(model_corrComp{i},lipidNames,chains,data{i}.fluxData);
 end
 
-%1. Exp data: lipid classes
-lipids     = data{1}.lipidData.metAbbrev([1,3:end]);        %Take out ergosterol
-abundance  = data{1}.lipidData.abundance([1,3:end])*1000;	%mg/gDW
-color      = [0  1  0];                                     %Green
-barPlot(abundance,lipids,'[mg/gDW]',color,15,600);
-
-%2. Exp data: chains
-abundance = data{1}.chainData.abundance(1:end-2)*1000;  %mg/gDW
-color     = [1  0  0];                                  %Red
-barPlot(abundance,chains,'[mg/gDW]',color,25,500);
-
 %3. Compare distributions of chains:
+expChains  = data{1}.chainData.abundance(1:end-2)*1000;  %mg/gDW
 oldChains  = sum(old{1}.comp)';
 newChains  = sum(new{1}.comp)';
-abundances = [oldChains/sum(oldChains) newChains/sum(newChains)]*100;
+abundances = [oldChains/sum(oldChains) newChains/sum(newChains) expChains/sum(expChains)]*100;
 color      = [1  1  0      %Yellow
-              1  0  0];    %Red
+              1  0  0      %Red
+              0  0  1];    %Blue
 barPlot(abundances,chains,'[%]',color,60,900);
-legend('Yeast7 - correct lipid composition','Yeast7 - correct lipid+chain composition', ...
+legend('Original GEM','GEM with SLIME reactions', 'Experimental values', ...
        'Location','northeast')
 legend('boxoff')
 
 %4. Compare distribution of chains in lipids - old model:
-color = [0    1    0
-         0.2  0.7  0
-         0.5  0.5  0
-         0.8  0.3  0
-         1    0    0];
+lipids = data{1}.lipidData.metAbbrev([1,3:end]);        %Take out ergosterol
+color  = [0    1    0
+          0.2  0.7  0
+          0.5  0.5  0
+          0.8  0.3  0
+          1    0    0];
 barPlot(old{1}.comp,lipids,'[mg/gDW]',color,20,900);
 legend(chains,'Location','northwest')
 legend('boxoff')
