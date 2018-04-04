@@ -39,25 +39,15 @@ legend('Original GEM','GEM with SLIME reactions', 'Experimental values', ...
        'Location','northeast')
 legend('boxoff')
 
-%4. Compare distribution of chains in lipids - old model:
+%5. Compare variability of chains in lipids - old model:
 lipids = data{1}.lipidData.metAbbrev([1,3:end]);        %Take out ergosterol
 color  = [0    1    0
           0.2  0.7  0
           0.5  0.5  0
           0.8  0.3  0
           1    0    0];
-barPlot(old{1}.comp,lipids,'[mg/gDW]',color,20,900);
-legend(chains,'Location','northwest')
-legend('boxoff')
-
-%5. Compare variability of chains in lipids - old model:
 b = barPlot(old{1},lipids,'[mg/gDW]',color,20,900);
 legend(b,chains,'Location','northwest')
-legend('boxoff')
-
-%6. Compare distribution of chains in lipids - new model:
-barPlot(new{1}.comp,lipids,'[mg/gDW]',color,20,900);
-legend(chains,'Location','northwest')
 legend('boxoff')
 
 %7. Compare variability of chains in lipids - new model:
