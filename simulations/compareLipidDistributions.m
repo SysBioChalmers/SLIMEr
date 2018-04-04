@@ -26,7 +26,7 @@ for i = 1:length(data)
     old{i} = getLipidDistribution(model_corrComp{i},lipidNames,chains,data{i}.fluxData);
 end
 
-%3. Compare distributions of chains:
+%Fig 2A: Compare distributions of chains
 expChains  = data{1}.chainData.abundance(1:end-2)*1000;  %mg/gDW
 oldChains  = sum(old{1}.comp)';
 newChains  = sum(new{1}.comp)';
@@ -39,7 +39,7 @@ legend('Original GEM','GEM with SLIME reactions', 'Experimental values', ...
        'Location','northeast')
 legend('boxoff')
 
-%5. Compare variability of chains in lipids - old model:
+%Fig S2: Compare variability of chains in lipids - old model:
 lipids = data{1}.lipidData.metAbbrev([1,3:end]);        %Take out ergosterol
 color  = [0    1    0
           0.2  0.7  0
@@ -50,12 +50,12 @@ b = barPlot(old{1},lipids,'[mg/gDW]',color,20,900);
 legend(b,chains,'Location','northwest')
 legend('boxoff')
 
-%7. Compare variability of chains in lipids - new model:
+%Fig 2B: Compare variability of chains in lipids - new model:
 b = barPlot(new{1},lipids,'[mg/gDW]',color,20,900);
 legend(b,chains,'Location','northwest')
 legend('boxoff')
 
-%8. Compare differences at stress conditions:
+%Fig 4: Compare differences at stress conditions:
 Cchange = zeros(length(model_SLIMEr),1);
 NGAMs   = zeros(length(model_SLIMEr),1);
 Cdiff   = zeros(length(model_SLIMEr),1);    

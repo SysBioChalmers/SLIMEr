@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % lipidValidation
 %
-% Benjamín J. Sánchez. Last update: 2018-04-02
+% Benjamín J. Sánchez. Last update: 2018-04-04
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 rng default
@@ -38,7 +38,7 @@ for i = 1:length(model_corrComp_val)
     %Plot data:
     ymax = ceil(max(y)/5)*5;
     if i == 1
-        %Main figure:
+        %Fig 3: Random sampling at reference conditions
         xlength = 1400;
         figure('position', [100,100,xlength,400])
         barPlot(data.abundance,data.metNames,'[mg/gDW]','r',ymax,xlength,data.std);
@@ -49,7 +49,7 @@ for i = 1:length(model_corrComp_val)
     else
         xlength = 1000;
     end
-    %Supplementary figure:
+    %Fig S3: Random sampling at all conditions
     subplot(length(model_corrComp_val),1,length(model_corrComp_val)+1-i)
     barPlot(data.abundance,data.metNames,'[mg/gDW]','r',ymax,xlength,data.std);
     hold on
