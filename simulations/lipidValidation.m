@@ -13,7 +13,7 @@ conds  = {'BY4741 wild type - 24ºC','BY4741 wild type - 37ºC', ...
           'BY4741 \itelo1\rm\Delta - 24ºC','BY4741 \itelo1\rm\Delta - 37ºC', ...
           'BY4741 \itelo2\rm\Delta - 24ºC','BY4741 \itelo2\rm\Delta - 37ºC', ...
           'BY4741 \itelo3\rm\Delta - 24ºC','BY4741 \itelo3\rm\Delta - 37ºC'};
-errors = zeros(length(model_corrComp_val),2);
+errors = zeros(2,length(model_corrComp_val));
 for i = 1:length(model_corrComp_val)
     %Read experimental data for each condition:
     data = readEjsingData(i);
@@ -29,7 +29,7 @@ for i = 1:length(model_corrComp_val)
     %Averages & errors:
     means       = [mean(abundance_modC,2) mean(abundance_modS,2)];
     diffs       = means - ones(size(means)).*data.abundance;
-    errors(i,:) = sum(abs(diffs),1)/length(diffs);
+    errors(:,i) = sum(abs(diffs'),2)/length(diffs);
     
     %Reshape model results:
     x = repmat((1:length(data.metNames))',Nsim,1);
