@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % data = convertEjsingData(data,model,condense)
 %
-% Benjamín J. Sánchez. Last update: 2018-03-26
+% Benjamín J. Sánchez. Last update: 2018-04-10
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function data = convertEjsingData(data_old,model,condense)
@@ -34,7 +34,7 @@ if condense
     
     %Tails: First get tail names & MWs
     fid       = fopen('chainData_Lahtvee2016.csv');
-    chainData = textscan(fid,[repmat('%s ',[1,2]) repmat('%f32 ',[1,9]) '%f32'],'Delimiter',',','HeaderLines',1);
+    chainData = textscan(fid,[repmat('%s ',[1,2]) repmat('%f32 ',[1,19]) '%f32'],'Delimiter',',','HeaderLines',1);
     fclose(fid);
     chainNames    = chainData{1};
     tempNames     = strrep(chainNames,'C','');

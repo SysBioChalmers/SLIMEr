@@ -38,7 +38,8 @@ end
 
 %Add standard deviation:
 if ~isempty(std)
-    errorbar(1:length(names),data,std,'.')
+    e = errorbar(1:length(names),data,std,'k.');
+    e.Marker = 'none';
 end
 
 %Various options:

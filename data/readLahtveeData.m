@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % data = readLahtveeData(i)
 %
-% Benjamín J. Sánchez. Last update: 2018-03-05
+% Benjamín J. Sánchez. Last update: 2018-04-09
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function data = readLahtveeData(i)
@@ -17,10 +17,11 @@ fclose(fid);
 
 %Chain data:
 fid = fopen('chainData_Lahtvee2016.csv');
-chainData = textscan(fid,[repmat('%s ',[1,2]) repmat('%f32 ',[1,9]) '%f32'],'Delimiter',',','HeaderLines',1);
+chainData = textscan(fid,[repmat('%s ',[1,2]) repmat('%f32 ',[1,19]) '%f32'],'Delimiter',',','HeaderLines',1);
 data.chainData.metNames  = chainData{1};
 data.chainData.formulas  = chainData{2};
-data.chainData.abundance = chainData{2+i};
+data.chainData.abundance = chainData{1+2*i};
+data.chainData.std       = chainData{2+2*i};
 fclose(fid);
 
 %Other composition data:

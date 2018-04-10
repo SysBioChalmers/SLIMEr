@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % compareLipidDistributions
 %
-% Benjamín J. Sánchez. Last update: 2018-04-04
+% Benjamín J. Sánchez. Last update: 2018-04-09
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Get lipid distribution for each condition:
@@ -27,17 +27,26 @@ for i = 1:length(data)
 end
 
 %Fig 2A: Compare distributions of chains
-expChains  = data{1}.chainData.abundance(1:end-2)*1000;  %mg/gDW
-oldChains  = sum(old{1}.comp)';
-newChains  = sum(new{1}.comp)';
-abundances = [oldChains/sum(oldChains) newChains/sum(newChains) expChains/sum(expChains)]*100;
-color      = [1  1  0      %Yellow
-              1  0  0      %Red
-              0  0  1];    %Blue
-barPlot(abundances,chains,'[%]',color,60,900);
+expChains = data{1}.chainData.abundance(1:end-2)*1000;  %mg/gDW
+stdChains = data{1}.chainData.std(1:end-2)*1000;        %mg/gDW
+oldChains = sum(old{1}.comp)';
+newChains = sum(new{1}.comp)';
+oldChains = oldChains/sum(oldChains)*100;
+newChains = newChains/sum(newChains)*100;
+stdChains = stdChains/sum(expChains)*100;
+expChains = expChains/sum(expChains)*100;
+color     = [1  1  0      %Yellow
+             1  0  0      %Red
+             0  0  1];    %Blue
+b = barPlot([oldChains newChains expChains],chains,'[%]',color,60,900);
 legend('Original GEM','GEM with SLIME reactions', 'Experimental values', ...
        'Location','northeast')
 legend('boxoff')
+hold on
+posExp = b(3).XData + b(3).XOffset;
+e = errorbar(posExp',expChains,stdChains,'k.');
+e.Marker = 'none';
+hold off
 
 %Fig S2: Compare variability of chains in lipids - old model:
 lipids = data{1}.lipidData.metAbbrev([1,3:end]);        %Take out ergosterol
