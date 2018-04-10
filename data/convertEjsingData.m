@@ -33,7 +33,7 @@ if condense
     data.lipidData = squashLipids(data.lipidData,backbones);
     
     %Tails: First get tail names & MWs
-    fid       = fopen('chainData_Lahtvee2016.csv');
+    fid       = fopen('chainData_Lahtvee2017.csv');
     chainData = textscan(fid,[repmat('%s ',[1,2]) repmat('%f32 ',[1,19]) '%f32'],'Delimiter',',','HeaderLines',1);
     fclose(fid);
     chainNames    = chainData{1};
