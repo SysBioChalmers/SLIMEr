@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % compareLipidDistributions
 %
-% Benjamín J. Sánchez. Last update: 2018-04-09
+% Benjamín J. Sánchez. Last update: 2018-04-12
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Get lipid distribution for each condition:
@@ -64,7 +64,7 @@ b = barPlot(new{1},lipids,'[mg/gDW]',color,20,900);
 legend(b,chains,'Location','northwest')
 legend('boxoff')
 
-%Fig 4: Compare differences at stress conditions:
+%Compare differences at stress conditions:
 Cchange = zeros(length(model_SLIMEr),1);
 NGAMs   = zeros(length(model_SLIMEr),1);
 Cdiff   = zeros(length(model_SLIMEr),1);    
@@ -91,25 +91,25 @@ for i = 1:length(model_SLIMEr)
     Cdiff(i) = sum(abs(CmolDiff))*1000;                             %mmol/gDW
     
     %Extra ATP cost [mmol/gDW]
-    ATPdiff(i) = old{i}.netATP - new{i}.netATP;	%mmol/gDW
+    ATPdiff(i) = (old{i}.netATP - new{i}.netATP)*1000;  %umol/gDW
     
     %Mean variability [mg/gDW]
-    newVar     = new{i}.var.max - new{i}.var.min;   %mg/gDW
-    meanVar(i) = mean(mean(newVar));                %mg/gDW
+    newVar     = new{i}.var.max - new{i}.var.min;       %mg/gDW
+    meanVar(i) = mean(mean(newVar));                    %mg/gDW
 end
-stressData = [Cchange NGAMs meanVar Cdiff ATPdiff];
-varNames = {'Experimental difference in chain composition compared to reference [%]', ...
-            'Fitted maintenance in original model [mmol/gDWh]', ...
-            'Mean variability in model with SLIME rxns [mg/gDW]', ...
-            'Extra carbon cost of adding SLIME rxns [mmol/gDW]', ...
-            'Extra ATP cost of adding SLIME rxns [mmol/gDW]'};
-figure('position', [100,100,900,400])
-subplot(1,3,1)
-stressPlot([30 33 36 38],stressData(1:4,:),{'','','','',''},'Temperature [°C]')
-subplot(1,3,2)
-stressPlot([0 200 400 600],stressData([1 5:7],:),varNames,'NaCl [mM]')
-subplot(1,3,3)
-stressPlot([0 20 40 60],stressData([1 8:10],:),{'','','','',''},'Ethanol [g/L]')
+
+%Fig 4: Main variables
+mainStressData = [Cdiff ATPdiff];
+mainVarNames   = {'Extra carbon cost of adding SLIME rxns [mmol/gDW]', ...
+                  'Extra ATP cost of adding SLIME rxns [\mumol/gDW]'};
+stressPlot(mainStressData,mainVarNames,[1 3],[50 300])
+
+%Fig S4: Supplementary variables
+suppStressData = [Cchange NGAMs meanVar];
+suppVarNames   = {'Experimental difference in chain composition compared to reference [%]', ...
+                  'Fitted maintenance in original model [mmol/gDWh]', ...
+                  'Mean variability in model with SLIME rxns [mg/gDW]'};
+stressPlot(suppStressData,suppVarNames,[0 20],[3 5])
 rmpath('../data')
 rmpath('../models')
 
