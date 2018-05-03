@@ -22,7 +22,8 @@ for i = 1:length(model_corrComp_val)
     data.abundance = data.abundance(1:end-1)*1000;   %mg/gDW
     data.std       = data.std(1:end-1)*1000;         %mg/gDW
     
-    Nsim = 10000;
+    Nsim  = 10000;
+    trans = 0.006;
     abundance_modC = lipidRandomSampling(model_corrComp_val{i},data,Nsim);
     abundance_modS = lipidRandomSampling(model_SLIMEr_val{i},data,Nsim);
     
@@ -43,7 +44,7 @@ for i = 1:length(model_corrComp_val)
         figure('position', [100,100,xlength,400])
         barPlot(data.abundance,data.metNames,'[mg/gDW]','r',ymax,xlength,data.std);
         hold on
-        scatter(x,y,10,'b','MarkerEdgeAlpha',.02)
+        scatter(x,y,10,'b','MarkerEdgeAlpha',trans)
         hold off
         figure('position', [100,100,xlength,600])
     else
@@ -53,7 +54,7 @@ for i = 1:length(model_corrComp_val)
     subplot(length(model_corrComp_val),1,length(model_corrComp_val)+1-i)
     barPlot(data.abundance,data.metNames,'[mg/gDW]','r',ymax,xlength,data.std);
     hold on
-    scatter(x,y,10,'b','MarkerEdgeAlpha',.02)
+    scatter(x,y,10,'b','MarkerEdgeAlpha',trans)
     text(80,ymax-5,conds{i})
     hold off
 end
