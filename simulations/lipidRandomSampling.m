@@ -12,9 +12,10 @@ posX          = strcmp(model.rxnNames,'growth');
 muS           = sol.x(posX);
 
 %Get a number of simulations from random sampling:
-model_r = ravenCobraWrapper(model);
-disp('Initializing random sampling...')
-samples = randomSampling(model_r,Nsim);
+cd optGpSampler_1.1_Matlab
+sModel  = optGpSampler(model,[],Nsim,500,4,'gurobi',1);
+samples = sModel.points;
+cd ..
 
 %Find matching positions for each species and compute predicted abundance:
 abundance = zeros(length(data.metNames),Nsim);
