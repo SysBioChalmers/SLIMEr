@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % abundance = lipidRandomSampling(model,data,Nsim)
 %
-% Benjamín J. Sánchez. Last update: 2018-03-31
+% Benjamín J. Sánchez. Last update: 2018-05-04
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function abundance = lipidRandomSampling(model,data,Nsim)
@@ -9,7 +9,7 @@ function abundance = lipidRandomSampling(model,data,Nsim)
 %Simulate a flux distribution with the corresponding model:
 [sol,model] = simulateGrowth(model,data.fluxData);
 posX          = strcmp(model.rxnNames,'growth');
-muS           = sol.x(posX);
+muS           = sol.x(posX);                                %1/h
 
 %Get a number of simulations from random sampling:
 cd optGpSampler_1.1_Matlab
@@ -31,13 +31,13 @@ for j = 1:length(data.metNames)
         fluxPos = isSub.*isSLIME';
         fluxes  = fluxPos*samples;
         
+        %Some fluxes end up negative due to the random sampling algorithm:
+        fluxes(fluxes < 0) = 0;                             %mmol/gDWh
+        
         %Compute abundance predicted by model:
-        abundance(j,:) = sum(fluxes.*MWs,1)/muS*1000;	%mg/gDW
+        abundance(j,:) = sum(fluxes.*MWs,1)/muS*1000;       %mg/gDW
     end
 end
-
-%Compute error:
-
 
 end
 
