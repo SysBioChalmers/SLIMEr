@@ -36,8 +36,8 @@ newChains = newChains/sum(newChains)*100;
 stdChains = stdChains/sum(expChains)*100;
 expChains = expChains/sum(expChains)*100;
 color     = [1  1  0      %Yellow
-             1  0  0      %Red
-             0  0  1];    %Blue
+             0  0  1      %Blue
+             1  0  0];    %Red
 b = barPlot([oldChains newChains expChains],chains,'[%]',color,60,900);
 legend('Original GEM','GEM with SLIME reactions', 'Experimental values', ...
        'Location','northeast')
