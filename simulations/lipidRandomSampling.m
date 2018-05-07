@@ -13,7 +13,7 @@ muS           = sol.x(posX);                                %1/h
 
 %Get a number of simulations from random sampling:
 cd optGpSampler_1.1_Matlab
-sModel  = optGpSampler(model,[],Nsim,500,4,'gurobi',1);
+sModel  = optGpSampler(model,[],Nsim,1000,4,'gurobi',1);
 samples = sModel.points;
 cd ..
 
