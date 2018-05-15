@@ -39,13 +39,13 @@ color     = [1  1  0      %Yellow
              0  0  1      %Blue
              1  0  0];    %Red
 b = barPlot([oldChains newChains expChains],chains,'[%]',color,60,900);
-legend('Original GEM','GEM with SLIME reactions', 'Experimental values', ...
-       'Location','northeast')
-legend('boxoff')
 hold on
 posExp = b(3).XData + b(3).XOffset;
 e = errorbar(posExp',expChains,stdChains,'k.');
 e.Marker = 'none';
+legend(b(1:3),'Permissive model','Enhanced model', ...
+              'Experimental values','Location','northeast')
+legend('boxoff')
 hold off
 
 %Fig S2: Compare variability of chains in lipids - old model:
@@ -98,17 +98,17 @@ for i = 1:length(model_SLIMEr)
     meanVar(i) = mean(mean(newVar));                    %mg/gDW
 end
 
-%Fig 4: Main variables
+%Fig 5: Main variables
 mainStressData = [Cdiff ATPdiff];
-mainVarNames   = {'Extra carbon cost of adding SLIME rxns [mmol/gDW]', ...
-                  'Extra ATP cost of adding SLIME rxns [\mumol/gDW]'};
+mainVarNames   = {'Extra carbon cost [mmol/gDW]', ...
+                  'Extra ATP cost [\mumol/gDW]'};
 stressPlot(mainStressData,mainVarNames,[1 3],[50 300])
 
 %Fig S4: Supplementary variables
 suppStressData = [Cchange NGAMs meanVar];
 suppVarNames   = {'Experimental difference in chain composition compared to reference [%]', ...
-                  'Fitted maintenance in original model [mmol/gDWh]', ...
-                  'Mean variability in model with SLIME rxns [mg/gDW]'};
+                  'Fitted maintenance in permissive model [mmol/gDWh]', ...
+                  'Mean variability in enhanced model [mg/gDW]'};
 stressPlot(suppStressData,suppVarNames,[0 20],[3 5])
 rmpath('../data')
 rmpath('../models')
