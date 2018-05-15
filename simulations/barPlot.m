@@ -23,7 +23,7 @@ if isfield(data,'var')
             left  = i - 0.5 + (j-1)/N;
             right = i - 0.5 + j/N;
             b(j) = patch([left,right,right,left],[min,min,max,max],color(j,:));
-            plot([left,right],[comp,comp],'-k','LineWidth',1.5)
+            plot([left,right],[comp,comp],'-k','LineWidth',2.5)
         end
         plot([right,right],[0,ymax],'--k')
     end
