@@ -52,3 +52,4 @@ docs/_*
 # Other #
 #########
 simulations/optGpSampler_*
+simulations/*.mat
