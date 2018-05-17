@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % lipidValidation
 %
-% Benjamín J. Sánchez. Last update: 2018-05-15
+% Benjamín J. Sánchez. Last update: 2018-05-17
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 rng default
@@ -49,7 +49,7 @@ for i = 1:Ncond
     ymax  = ceil(max(y)/5)*5;
     trans = 0.006;
     if i == 1        
-        %Fig 3: Random sampling at reference conditions
+        %Fig 3A: Random sampling at reference conditions
         xlength = 1400;
         figure('position', [100,300,xlength,400])
         barPlot(data.abundance,data.metNames,'[mg/gDW]','r',ymax,xlength,data.std);
@@ -69,7 +69,7 @@ for i = 1:Ncond
     hold off
 end
 
-%Fig 4: PCA @ reference conditions
+%Fig 3B: PCA @ reference conditions
 lipids(lipids < 1e-6) = 1e-6;
 lipids = log10(lipids);
 [loadings,scores,~,~,explained] = pca(lipids);

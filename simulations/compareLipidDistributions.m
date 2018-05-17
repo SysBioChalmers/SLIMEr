@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % compareLipidDistributions
 %
-% Benjamín J. Sánchez. Last update: 2018-04-12
+% Benjamín J. Sánchez. Last update: 2018-05-17
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Get lipid distribution for each condition:
@@ -98,7 +98,7 @@ for i = 1:length(model_SLIMEr)
     meanVar(i) = mean(mean(newVar));                    %mg/gDW
 end
 
-%Fig 5: Main variables
+%Fig 3C: Main variables
 mainStressData = [Cdiff ATPdiff];
 mainVarNames   = {'Extra carbon cost [mmol/gDW]', ...
                   'Extra ATP cost [\mumol/gDW]'};
