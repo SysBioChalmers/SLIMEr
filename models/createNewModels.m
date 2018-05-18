@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % createNewModels
 %
-% Benjamín J. Sánchez. Last update: 2018-03-30
+% Benjamín J. Sánchez. Last update: 2018-05-18
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clear variables
@@ -12,7 +12,7 @@ addpath('../data')
 initCobraToolbox
 
 %Original model:
-model = load('yeastGEM.mat');
+model = load('yeast780.mat');
 model = model.model;
 
 %Create 2 models for each of the 10 conditions in the stress dataset:
