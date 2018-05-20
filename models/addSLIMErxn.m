@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % [model,toDelete] = addSLIMErxn(model,rxnID,specID)
 %
-% Benjamín J. Sánchez. Last update: 2018-03-24
+% Benjamín J. Sánchez. Last update: 2018-05-20
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [model,toDelete] = addSLIMErxn(model,rxnID,specID)
@@ -39,7 +39,8 @@ backName = backName(1:strfind(backName,'[')-2);
 specName = specName(1:strfind(specName,'[')-2);
 
 %Stoich. coeff. for backbone: molecular weight of specific species
-specMW = getMWfromFormula(model.metFormulas(specPos));
+specFormula = model.metFormulas(specPos);
+specMW      = getMWfromFormula(specFormula);
 
 %Define number of tails to add:
 switch backName
@@ -67,9 +68,9 @@ switch backName
           'inositol phosphomannosylinositol phosphoceramide'    %MIPC
           'mannosylinositol phosphorylceramide'}                %M(IP)2C
         if contains(specName,'(C24)')
-            tailsRxn = {'C18:0';'C24:0'};
+            tailsRxn = {'C18:0','C24:0'};
         elseif contains(specName,'(C26)')
-            tailsRxn = {'C18:0';'C26:0'};
+            tailsRxn = {'C18:0','C26:0'};
         end
         
     %Cases with specific names:
@@ -100,18 +101,37 @@ switch backName
 end
 
 %Find tail metabolites in model:
-tailPos    = find(~cellfun(@isempty,strfind(model.metNames,' chain [cytoplasm]')));
-tailIDs    = model.mets(tailPos)';
-tailsModel = model.metNames(tailPos)';
-tailsMWs   = getMWfromFormula(model.metFormulas(tailPos)');
-tailCoeffs = zeros(size(tailIDs));
+tailPos       = contains(model.metNames,' chain [cytoplasm]');
+tailIDs       = model.mets(tailPos)';
+tailsModel    = model.metNames(tailPos)';
+tailsFormulas = model.metFormulas(tailPos)';
+tailsMWs      = getMWfromFormula(tailsFormulas);
+tailCoeffs    = zeros(size(tailIDs));
 
 %Match to corresponding tail:
+prodFormulas = cell(size(tailsRxn));
 for i = 1:length(tailsRxn)
-    tailName   = [tailsRxn{i} ' chain [cytoplasm]'];
-    tailMatch  = strcmp(tailsModel,tailName);
-    tailCoeffs = tailCoeffs + tailMatch.*tailsMWs;
+    tailName        = [tailsRxn{i} ' chain [cytoplasm]'];
+    tailMatch       = strcmp(tailsModel,tailName);
+    tailCoeffs      = tailCoeffs + tailMatch.*tailsMWs;
+    prodFormulas{i} = tailsFormulas{tailMatch};
 end
+
+%Assign molecular formula to backbone by balancing out the SLIME rxns:
+backName     = [backName ' ['];
+formula      = '';
+elements     = {'C','H','N','O','P','S'};
+for j = 1:length(elements)
+    Nin  = getStoichFromFormula(specFormula, elements{j});
+    Nout = getStoichFromFormula(prodFormulas, elements{j});
+    diff = Nin - sum(Nout);
+    if diff == 1
+        formula = [formula elements{j}];
+    elseif diff > 1
+        formula = [formula elements{j} num2str(diff)];
+    end
+end
+model.metFormulas(startsWith(model.metNames,backName)) = {formula};
 
 %Create SLIME rxn (with same ID as previous ISA rxn but different name):
 model = addReaction(model,rxnID, ...
