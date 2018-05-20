@@ -109,11 +109,29 @@ tailsMWs      = getMWfromFormula(tailsFormulas);
 tailCoeffs    = zeros(size(tailIDs));
 
 %Match to corresponding tail:
+prodFormulas = cell(size(tailsRxn));
 for i = 1:length(tailsRxn)
-    tailName   = [tailsRxn{i} ' chain [cytoplasm]'];
-    tailMatch  = strcmp(tailsModel,tailName);
-    tailCoeffs = tailCoeffs + tailMatch.*tailsMWs;
+    tailName        = [tailsRxn{i} ' chain [cytoplasm]'];
+    tailMatch       = strcmp(tailsModel,tailName);
+    tailCoeffs      = tailCoeffs + tailMatch.*tailsMWs;
+    prodFormulas{i} = tailsFormulas{tailMatch};
 end
+
+%Assign molecular formula to backbone by balancing out the SLIME rxns:
+backName     = [backName ' ['];
+formula      = '';
+elements     = {'C','H','N','O','P','S'};
+for j = 1:length(elements)
+    Nin  = getStoichFromFormula(specFormula, elements{j});
+    Nout = getStoichFromFormula(prodFormulas, elements{j});
+    diff = Nin - sum(Nout);
+    if diff == 1
+        formula = [formula elements{j}];
+    elseif diff > 1
+        formula = [formula elements{j} num2str(diff)];
+    end
+end
+model.metFormulas(startsWith(model.metNames,backName)) = {formula};
 
 %Create SLIME rxn (with same ID as previous ISA rxn but different name):
 model = addReaction(model,rxnID, ...

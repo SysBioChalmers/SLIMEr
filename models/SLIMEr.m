@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % model = SLIMEr(model,data,includeTails)
 %
-% Benjamín J. Sánchez. Last update: 2018-03-30
+% Benjamín J. Sánchez. Last update: 2018-05-20
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function model = SLIMEr(model,data,includeTails)
@@ -12,13 +12,19 @@ metNames = model.metNames;
 for i = 1:length(metIDs)
     backName = getBackboneName(metNames{i});
     if ~isempty(backName)
-        if ~ismember(backName,model.metNames)
+        if ismember(backName,model.metNames)
+            if ~startsWith(backName,'ergosterol [')
+                model.metFormulas{strcmp(model.metNames,backName)} = '';
+            end
+        else
             model = addLipidSpecies(model,backName,'',false);
         end
         %Add transport rxn to cytoplasm for non cytoplasmic backbones:
         if ~contains(backName,'cytoplasm')
             cytoName = [backName(1:strfind(backName,'[')) 'cytoplasm]'];
-            if ~ismember(cytoName,model.metNames)
+            if ismember(cytoName,model.metNames)
+                model.metFormulas{strcmp(model.metNames,cytoName)} = '';
+            else
                 model = addLipidSpecies(model,cytoName,'',false);
             end
             backID    = model.mets(strcmp(model.metNames,backName));
@@ -53,12 +59,12 @@ for i = 1:length(data.chainData.metNames)
 end
 
 %Create lipid pseudo-rxn for backbones:
-model = addLipidSpecies(model,'lipid - backbones [cytoplasm]','NA',includeTails);
+model = addLipidSpecies(model,'lipid - backbones [cytoplasm]','',includeTails);
 model = changeLipidComp(model,data.lipidData);
 
 %Create lipid pseudo-rxn for tails:
 if includeTails
-    model = addLipidSpecies(model,'lipid - tails [cytoplasm]','NA',includeTails);
+    model = addLipidSpecies(model,'lipid - tails [cytoplasm]','',includeTails);
     model = changeChainComp(model,data.chainData);
 end
 
@@ -121,8 +127,9 @@ model.S(ADPpos,bioRxn) = +GAM;
 model.S(Hpos,bioRxn)   = +GAM;
 model.S(Ppos,bioRxn)   = +GAM;
 
-%Remove wrongly created field:
-model = rmfield(model,'grRules');
+%Correct some wrongly created fields:
+model   = rmfield(model,'grRules');
+model.S = full(model.S);
 
 end
 
