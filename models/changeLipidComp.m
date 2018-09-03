@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % model = changeLipidComp(model,lipidData)
 %
-% Benjamín J. Sánchez. Last update: 2018-03-24
+% Benjamín J. Sánchez. Last update: 2018-05-20
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function model = changeLipidComp(model,lipidData)
@@ -29,6 +29,7 @@ model = addReaction(model, rxnID, ...
                     'lowerBound', 0, ...
                     'upperBound', 1000);
 printRxnFormula(model,rxnID,true,true,true);
+model.rxnConfidenceScores(strcmp(model.rxns,rxnID)) = 1;
 
 end
 

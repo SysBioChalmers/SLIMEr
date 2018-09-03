@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % model = changeChainComp(model,chainData)
 %
-% Benjamín J. Sánchez. Last update: 2018-03-24
+% Benjamín J. Sánchez. Last update: 2018-05-20
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function model = changeChainComp(model,chainData)
@@ -31,6 +31,7 @@ model = addReaction(model, rxnID, ...
                     'upperBound', 1000);
                 
 printRxnFormula(model,rxnID,true,true,true);
+model.rxnConfidenceScores(strcmp(model.rxns,rxnID)) = 1;
 
 end
 

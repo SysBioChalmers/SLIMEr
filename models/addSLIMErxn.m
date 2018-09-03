@@ -145,6 +145,7 @@ model = addReaction(model,rxnID, ...
 
 try
     printRxnFormula(model,rxnID,true,true,true);
+    model.rxnConfidenceScores(strcmp(model.rxns,rxnID)) = 1;
 catch
     disp(['Repeated: ' rxnName])
 end
