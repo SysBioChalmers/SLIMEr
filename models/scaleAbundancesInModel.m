@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % [model,k] = scaleAbundancesInModel(model,data,scaling)
 %
-% Benjamín J. Sánchez. Last update: 2018-03-26
+% Benjamin J. Sanchez. Last update: 2018-09-05
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [model,k] = scaleAbundancesInModel(model,data,scaling)
@@ -14,6 +14,9 @@ kOpt = fminsearch(@(k)unusedLipid(k,model,data,scaling),k0);
 krange(1) = fminsearch(@(k) +minScaling(k,model,data,scaling,kOpt),kOpt);
 krange(2) = fminsearch(@(k) -minScaling(k,model,data,scaling,kOpt),kOpt);
 disp(['Optimality range: k = [ ' num2str(krange(1)) ' , ' num2str(krange(2)) ' ]'])
+if(krange(1) == krange(2))
+    error('Could not find an optimality range!')
+end
 
 %Scale with the average of the range:
 k     = mean(krange);
