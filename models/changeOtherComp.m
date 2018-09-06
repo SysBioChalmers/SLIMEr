@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % [model,GAMpol] = changeOtherComp(model,data)
 %
-% Benjamín J. Sánchez. Last update: 2018-03-30
+% Benjamin J. Sanchez. Last update: 2018-09-04
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [model,GAMpol] = changeOtherComp(model,data)
@@ -71,12 +71,15 @@ for i = 1:length(otherData.metIDs)
         compPos  = strcmp(comps(:,1),otherData.metIDs{i});
         if strcmp(comps{compPos,3},'C')
             rxnPos = strcmp(model.rxnNames,'carbohydrate pseudoreaction');
+            MW     = comps{compPos,2}-18;
         elseif strcmp(comps{compPos,3},'D')
             rxnPos = strcmp(model.rxnNames,'DNA pseudoreaction');
+            MW     = comps{compPos,2}-18;
         elseif strcmp(comps{compPos,3},'N')
             rxnPos = strcmp(model.rxnNames,'biomass pseudoreaction');
+            MW     = comps{compPos,2};
         end
-        model.S(modelPos,rxnPos) = -otherData.abundance(i)/comps{compPos,2}*1000;
+        model.S(modelPos,rxnPos) = -otherData.abundance(i)/MW*1000;
     end
 end
 
@@ -97,7 +100,7 @@ end
 
 %Estimate maintenance belonging to polymerization:
 [~,P,C,R,D,~] = sumBioMass(model,comps);
-GAMpol        = P*37.7 + C*12.8 + R*26.0 + D*26.0;    %Förster 2003 (sup table 8)
+GAMpol        = P*37.7 + C*12.8 + R*26.0 + D*26.0;    %Forster 2003 (sup table 8)
 
 end
 
