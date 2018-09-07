@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % b = barPlot(data,names,units,color,ymax,xlength,std)
 %
-% Benjamín J. Sánchez. Last update: 2018-04-02
+% Benjamin J. Sanchez. Last update: 2018-09-06
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function b = barPlot(data,names,units,color,ymax,xlength,std)
@@ -12,14 +12,14 @@ if nargin < 7
 end
 hold on
 
-if isfield(data,'var')
+if isfield(data,'lipVar')
     %Variability plot:
     [M,N] = size(data.comp);
     for i = 1:M
         for j = 1:N
             comp  = data.comp(i,j);
-            min   = data.var.min(i,j);
-            max   = data.var.max(i,j);
+            min   = data.lipVar.min(i,j);
+            max   = data.lipVar.max(i,j);
             left  = i - 0.5 + (j-1)/N;
             right = i - 0.5 + j/N;
             b(j) = patch([left,right,right,left],[min,min,max,max],color(j,:));
@@ -44,17 +44,9 @@ end
 
 %Various options:
 text_size = 12;
+plotOptions([0.5,M+0.5],[0 ymax],'',['Abundance ' units],1:length(names),'',names,'',text_size)
 axis = gca;
-axis.XAxis.TickValues = 1:length(names);
-axis.XAxis.TickLabel  = names;
 axis.XAxis.TickLength = [0,0];
-set(gca,'FontSize',text_size)
-ylabel(['Abundance ' units],'FontSize',text_size);
-xlim([0.5,M+0.5])
-ylim([0 ymax])
-set(gca,'XColor','k')
-set(gca,'YColor','k')
-box on
 hold off
 
 %Shrink and rotate labels when there are too many:

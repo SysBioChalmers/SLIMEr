@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % lipidValidation
 %
-% Benjamín J. Sánchez. Last update: 2018-05-17
+% Benjamin J. Sanchez. Last update: 2018-09-06
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 rng default
@@ -48,7 +48,7 @@ for i = 1:Ncond
     %Plot data:
     ymax  = ceil(max(y)/5)*5;
     trans = 0.006;
-    if i == 1        
+    if i == 1
         %Fig 3A: Random sampling at reference conditions
         xlength = 1400;
         figure('position', [100,300,xlength,400])
@@ -87,21 +87,16 @@ for i = 1:Ncond
     h3(i) = plot(scores(Nsim*(2*i-2)+i,1),scores(Nsim*(2*i-2)+i,2), ...
                  'or','MarkerFaceColor','r','MarkerSize',5,'LineWidth',2);
 end
-size_text = 15;
-xlabel(['PC1: ' num2str(explained(1),2) '% of variation'],'FontSize',size_text)
-ylabel(['PC2: ' num2str(explained(2),2) '% of variation'],'FontSize',size_text)
+x_lab = ['PC1: ' num2str(explained(1),2) '% of variation'];
+y_lab = ['PC2: ' num2str(explained(2),2) '% of variation'];
 legend([h1(4),h2(end),h3(end)],'\color[rgb]{0.5 0.5 0} Permissive model', ...
-                               '\color[rgb]{0   0   1} Enhanced model', ...
-                               '\color[rgb]{1   0   0} Experimental values', ...
-                               'Location','northeast');
+    '\color[rgb]{0   0   1} Enhanced model', ...
+    '\color[rgb]{1   0   0} Experimental values','Location','northeast');
 legend('boxoff')
+plotOptions('','',x_lab,y_lab,'','','','',15)
 set(gca,'XTickLabel',[]);
 set(gca,'YTickLabel',[]);
-set(gca,'FontSize',size_text)
-set(gca,'XColor','k')
-set(gca,'YColor','k')
 axis square
-box on
 hold off
 
 rmpath('../data')
