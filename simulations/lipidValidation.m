@@ -91,7 +91,7 @@ x_lab = ['PC1: ' num2str(explained(1),2) '% of variation'];
 y_lab = ['PC2: ' num2str(explained(2),2) '% of variation'];
 legend([h1(4),h2(end),h3(end)],'\color[rgb]{0.5 0.5 0} Permissive model', ...
     '\color[rgb]{0   0   1} Enhanced model', ...
-    '\color[rgb]{1   0   0} Experimental values','Location','northeast');
+    '\color[rgb]{1   0   0} Experimental values','Location','southeast');
 legend('boxoff')
 plotOptions('','',x_lab,y_lab,'','','','',15)
 set(gca,'XTickLabel',[]);
