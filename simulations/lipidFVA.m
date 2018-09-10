@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % [minVal,maxVal] = lipidFVA(model,lipidName,chainName)
 %
-% Benjamín J. Sánchez. Last update: 2018-01-10
+% Benjamin J. Sanchez. Last update: 2018-09-03
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [minVal,maxVal] = lipidFVA(model,lipidName,chainName)
@@ -29,11 +29,11 @@ else
 
     %Minimize:
     sol    = optimizeCbModel(model,'min');
-    minVal = sol.f;
+    minVal = sum(model.c.*sol.x);
     
     %Maximize:
     sol    = optimizeCbModel(model,'max');
-    maxVal = sol.f;
+    maxVal = sum(model.c.*sol.x);
 end
 
 end
