@@ -50,11 +50,7 @@ hold off
 
 %Fig S2: Compare variability of chains in lipids - old model:
 lipids = data{1}.lipidData.metAbbrev([1,3:end]);        %Take out ergosterol
-color  = [0    1    0
-          0.2  0.7  0
-          0.5  0.5  0
-          0.8  0.3  0
-          1    0    0];
+color  = sampleCVDmap(4);
 b = barPlot(old{1},lipids,'[mg/gDW]',color,20,900);
 legend(b,chains,'Location','northwest')
 legend('boxoff')

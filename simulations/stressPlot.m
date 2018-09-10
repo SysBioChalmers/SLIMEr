@@ -28,12 +28,13 @@ end
 
 function stressSubPlot(stressLevels,stressData,varNames,x_lab,ylim1,ylim2)
 
+color = sampleCVDmap(4);
 if contains(x_lab,'Temp')
-    color = [1 0 0];            %red
+    color = color(1,:);
 elseif contains(x_lab,'NaCl')
-    color = [0 0 1];            %blue
+    color = color(3,:);
 elseif contains(x_lab,'Ethanol')
-    color = [0 128/255 0];      %forest green
+    color = color(4,:);
 end
 hold on
 yyaxis left
