@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % data = convertEjsingData(data,model,condense)
 %
-% Benjamín J. Sánchez. Last update: 2018-04-10
+% Benjamin J. Sanchez. Last update: 2018-09-09
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function data = convertEjsingData(data_old,model,condense)
@@ -50,6 +50,7 @@ if condense
 else
     %Only change units to g/gDW:
     data = changeUnits(data_old,MWs);
+    data.molarAbundance = data_old.abundance;
 end
 
 %Add missing data: composition and fluxes

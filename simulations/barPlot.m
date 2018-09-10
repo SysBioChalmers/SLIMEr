@@ -1,14 +1,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% b = barPlot(data,names,units,color,ymax,xlength,std)
+% b = barPlot(data,names,units,color,ymax,xlength,std,stacked)
 %
-% Benjamin J. Sanchez. Last update: 2018-09-06
+% Benjamin J. Sanchez. Last update: 2018-09-09
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function b = barPlot(data,names,units,color,ymax,xlength,std)
+function b = barPlot(data,names,units,color,ymax,xlength,std,stacked)
 
 if nargin < 7
     figure('position', [100,100,xlength,400])
     std = [];
+end
+if nargin < 8
+    stacked = false;
 end
 hold on
 
@@ -30,7 +33,11 @@ if isfield(data,'lipVar')
 else
     %Simple barplot:
     [M,N] = size(data);
-    b = bar(data,'BarWidth',1);
+    if stacked
+        b = bar(data,'stacked','BarWidth',0.6);
+    else
+        b = bar(data,'BarWidth',1);
+    end
     for i = 1:N
         set(b(i),'FaceColor',color(i,:));
     end

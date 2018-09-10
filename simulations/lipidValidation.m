@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % lipidValidation
 %
-% Benjamin J. Sanchez. Last update: 2018-09-06
+% Benjamin J. Sanchez. Last update: 2018-09-09
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 rng default
@@ -23,9 +23,25 @@ for i = 1:Ncond
     %Read experimental data for each condition:
     data = readEjsingData(i);
     data = convertEjsingData(data,model,false);
-    data.metNames  = data.metNames(1:end-1);         %filter out ergosterol
-    data.abundance = data.abundance(1:end-1)*1000;   %mg/gDW
-    data.std       = data.std(1:end-1)*1000;         %mg/gDW
+    data.metNames       = data.metNames(1:end-1);       %filter out ergosterol
+    data.molarAbundance = data.molarAbundance(1:end-1);	%mol/mol
+    data.abundance      = data.abundance(1:end-1)*1000;	%mg/gDW
+    data.std            = data.std(1:end-1)*1000;       %mg/gDW
+    
+    %Get backbone & chain information:
+    data.backNames  = cell(size(data.metNames));
+    data.chainNames = cell(size(data.metNames));
+    data.allChains  = [];
+    for j = 1:length(data.metNames)
+        parts = strsplit(data.metNames{j},' ');
+        data.backNames{j}  = parts{1};
+        data.chainNames{j} = strsplit(parts{2},'-');
+        data.chainNames{j} = regexprep(data.chainNames{j},';[0-9]','');
+        data.allChains     = [data.allChains data.chainNames{j}];
+    end
+    data.groups    = findgroups(data.backNames);
+    data.allBacks  = unique(data.backNames);
+    data.allChains = unique(data.allChains);
     
     %Perform random sampling:
     abundance_modC{i} = lipidRandomSampling(model_corrComp_val{i},data,Nsim);
@@ -49,6 +65,25 @@ for i = 1:Ncond
     ymax  = ceil(max(y)/5)*5;
     trans = 0.006;
     if i == 1
+        %Fig S2: Experimental chain distribution
+        xlength = 1350;
+        figure('position', [100,100,xlength,400])
+        molarProps = zeros(length(data.allBacks),length(data.allChains));
+        for j = 1:length(data.metNames)
+            pos_b = strcmp(data.allBacks,data.backNames{j});
+            for k = 1:length(data.chainNames{j})
+                pos_c = strcmp(data.allChains,data.chainNames{j}{k});
+                molarProps(pos_b,pos_c) = molarProps(pos_b,pos_c) + data.molarAbundance(j);
+            end
+        end
+        molarProps = molarProps./sum(molarProps,2)*100;
+        names      = data.allBacks(~isnan(sum(molarProps,2)));
+        molarProps = molarProps(~isnan(sum(molarProps,2)),:);
+        color      = sampleCVDmap(6);
+        barPlot(molarProps,names,'[molar %]',color,100,xlength,[],true);
+        legend(data.allChains,'location','eastoutside')
+        legend('boxoff')
+        
         %Fig 3A: Random sampling at reference conditions
         xlength = 1400;
         figure('position', [100,300,xlength,400])
@@ -60,7 +95,7 @@ for i = 1:Ncond
     else
         xlength = 1000;
     end
-    %Fig S3: Random sampling at all conditions
+    %Fig S4: Random sampling at all conditions
     subplot(Ncond,1,Ncond+1-i)
     barPlot(data.abundance,data.metNames,'[mg/gDW]','r',ymax,xlength,data.std);
     hold on
