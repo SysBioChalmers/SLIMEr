@@ -52,8 +52,9 @@ for i = 1:Ncond
     lipids((Nsim*(2*i-2)+i+1):(Nsim*(2*i-1)+i),:) = abundance_modC{i}';
     lipids((Nsim*(2*i-1)+i+1):(Nsim*(2*i)+i),:)   = abundance_modS{i}';
     
-    %Averages & errors:
+    %Averages - stds - errors:
     means       = [mean(abundance_modC{i},2) mean(abundance_modS{i},2)];
+    stds        = [std(abundance_modC{i},[],2) std(abundance_modS{i},[],2)];
     diffs       = means - ones(size(means)).*data.abundance;
     errors(:,i) = sum(abs(diffs'),2)/length(diffs);
     
@@ -91,11 +92,56 @@ for i = 1:Ncond
         hold on
         scatter(x,y,10,'b','MarkerEdgeAlpha',trans)
         hold off
+        
+        %Fig S4B: Cumulative distribution of variability
+        figure('position', [100,100,500,500])
+        stdmax = ceil(max(max(stds)));
+        color  = {'y';'b'};
+        hold on
+        for j = 1:2
+            sorted = sort(stds(:,j));
+            cumdis = (0:length(sorted))./length(sorted);
+            medval = median(stds(:,j));
+            h(j) = plot([0;sorted],cumdis,['-' color{j}],'LineWidth',3);
+        end
+        plotOptions([0 stdmax],[0 1],'Standard Deviation [mg/gDW]', ...
+            'Cumulative distribution',[],[],[],[],12)
+        modelNames = {'Permissive model';'Enhanced model'};
+        legend(h,['\color[rgb]{1 1 0} ' modelNames{1}], ...
+                 ['\color[rgb]{0 0 1} ' modelNames{2}],'Location','southeast');
+        legend('boxoff')
+        hold off
+        
+        %Fig S4C: Variability breakdown
+        figure('position', [100,100,1200,600])
+        xticks = (1:length(stds))';
+        hold on
+        for j = 1:2
+            h(j) = plot(xticks,stds(:,j),['o' color{j}],'MarkerFaceColor',color{j});
+            %Compute average stds for each backbone group:
+            meanstds = splitapply(@mean,stds(:,j),data.groups);
+            for k = 1:length(meanstds)
+                meanx = xticks(data.groups == k);
+                meany = meanstds(k)*ones(size(meanx));
+                plot(meanx,meany,['--' color{j}])
+                plot([max(meanx)+0.5,max(meanx)+0.5],[0,stdmax],'--k')
+            end
+            totalmean = mean(stds(:,j));
+            plot([0 length(xticks)+1],[totalmean,totalmean],['--' color{j}],'LineWidth',2.5)
+        end
+        plotOptions([0 length(xticks)+1],[0 stdmax],[],'Standard Deviation [mg/gDW]', ...
+            xticks,[],data.metNames,[],6)
+        xtickangle(90)
+        legend(h,['\color[rgb]{1 1 0} ' modelNames{1}], ...
+                 ['\color[rgb]{0 0 1} ' modelNames{2}],'Location','northwest');
+        legend('boxoff')
+        hold off
+        
         figure('position', [100,100,xlength,600])
     else
         xlength = 1000;
     end
-    %Fig S4: Random sampling at all conditions
+    %Fig S5: Random sampling at all conditions
     subplot(Ncond,1,Ncond+1-i)
     barPlot(data.abundance,data.metNames,'[mg/gDW]','r',ymax,xlength,data.std);
     hold on
