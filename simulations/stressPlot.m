@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % stressPlot(stressData,varNames,ylim1,ylim2)
 %
-% Benjamín J. Sánchez. Last update: 2018-04-12
+% Benjamin J. Sanchez. Last update: 2018-09-06
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function stressPlot(stressData,varNames,ylim1,ylim2)
@@ -28,12 +28,13 @@ end
 
 function stressSubPlot(stressLevels,stressData,varNames,x_lab,ylim1,ylim2)
 
+color = sampleCVDmap(4);
 if contains(x_lab,'Temp')
-    color = [1 0 0];            %red
+    color = color(1,:);
 elseif contains(x_lab,'NaCl')
-    color = [0 0 1];            %blue
+    color = color(3,:);
 elseif contains(x_lab,'Ethanol')
-    color = [0 128/255 0];      %forest green
+    color = color(4,:);
 end
 hold on
 yyaxis left
@@ -51,24 +52,12 @@ if isempty(varNames{1})
 end
 
 %Various options:
-text_size = 12;
-set(gca,'XTick',stressLevels)
 if m == 2
-    xlabel('Stress level','FontSize',text_size);
-else
-    xlabel(x_lab,'FontSize',text_size);
+    x_lab = 'Stress level';
 end
-xlim([stressLevels(1) stressLevels(end)])
-ylim(ylim2)
-set(gca,'FontSize',text_size)
-set(gca,'XColor','k')
-set(gca,'YColor','k')
-box on
+plotOptions([stressLevels(1) stressLevels(end)],ylim2,x_lab,'',stressLevels,'','','',12)
 yyaxis left
-ylim(ylim1)
-set(gca,'FontSize',text_size)
-set(gca,'YColor','k')
-box on
+plotOptions('',ylim1,'','','','','','',12)
 hold off
 
 end

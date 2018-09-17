@@ -1,9 +1,9 @@
 .. image:: SLIMEr.png
    :align: center
 
-Collection of scripts for adding SLIME (Split Lipids Into Measurable Entities) reactions into the genome-scale model of yeast. For more info, refer to the current pre-print: `SLIMEr: probing flexibility of lipid metabolism in yeast with an improved constraint-based modeling framework <https://www.biorxiv.org/content/early/2018/05/21/324863>`__.
+Collection of scripts for adding SLIME (Split Lipids Into Measurable Entities) reactions into the genome-scale model of yeast. For more info, refer to the current pre-print: `SLIMEr: probing flexibility of lipid metabolism in yeast with an improved constraint-based modeling framework <https://www.biorxiv.org/content/early/2018/09/14/324863>`__.
 
-Last update: 2018-05-30
+Last update: 2018-09-14
 
 This repository is administered by Benjamin J. Sanchez (`@BenjaSanchez <https://github.com/benjasanchez>`__), Division of Systems and Synthetic Biology, Department of Biology and Biological Engineering, Chalmers University of Technology.
 
@@ -22,6 +22,7 @@ Dependencies - Recommended Software:
 
 -  libSBML MATLAB API (version `5.16.0 <https://sourceforge.net/projects/sbml/files/libsbml/5.16.0/stable/MATLAB%20interface/>`__ is recommended).
 -  Gurobi Optimizer for MATLAB (version `7.5.2 <http://www.gurobi.com/registration/download-reg>`__ is recommended).
+-  An `implementation for Matlab <https://github.com/BenjaSanchez/cmaputil/tree/master/cmaputil_matlab>`__ of the `cividis colormap <https://journals.plos.org/plosone/article/comments?id=10.1371/journal.pone.0199239>`__.
 
 Contributors
 ------------

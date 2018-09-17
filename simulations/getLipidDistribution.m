@@ -1,10 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% data = getLipidDistribution(model,lipidNames,chains,fluxData)
+% data = getLipidDistribution(model,lipidNames,chains,fluxData,getFullVar)
 %
-% Benjamín J. Sánchez. Last update: 2018-03-26
+% Benjamin J. Sanchez. Last update: 2018-09-03
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function data = getLipidDistribution(model,lipidNames,chains,fluxData)
+function data = getLipidDistribution(model,lipidNames,chains,fluxData,getFullVar)
 
 %Simulate model:
 [sol,model_cons] = simulateGrowth(model,fluxData);
@@ -48,26 +48,42 @@ for i = 1:length(SLIMEpos)
     end
 end
 
-%Find variability:
-variability.min = zeros(size(composition));
-variability.max = zeros(size(composition));
+%Compute full FVA:
+if getFullVar
+    fullVar = zeros(size(model_cons.rxns));
+    for i = 1:length(fullVar)
+        %Change objective function and perform FVA:
+        model_i = changeObjective(model_cons,model_cons.rxns{i},+1);
+        sol_min = optimizeCbModel(model_i,'min');
+        sol_max = optimizeCbModel(model_i,'max');
+        fullVar(i) = sol_max.x(i) - sol_min.x(i);
+        if rem(i,50) == 0
+            disp(['Computing FVA for reference: ' num2str(i) '/' ...
+                num2str(length(model.rxns)) ' rxns done'])
+        end
+    end
+    data.fullVar = fullVar;  %mmol/gDWh
+end
+
+%Find lipid variability:
+lipVar.min = zeros(size(composition));
+lipVar.max = zeros(size(composition));
 for i = 1:length(lipidNames)
     for j = 1:length(chains)
-        [minVal,maxVal]      = lipidFVA(model_cons,lipidNames{i},chains{j});
-        variability.min(i,j) = minVal/mu;
-        variability.max(i,j) = maxVal/mu;
-        disp(['Computing composition and variability: ' lipidNames{i} ' - ' chains{j}])
+        [minVal,maxVal] = lipidFVA(model_cons,lipidNames{i},chains{j});
+        lipVar.min(i,j) = minVal/mu;
+        lipVar.max(i,j) = maxVal/mu;
     end
 end
 
 %Generate output:
-data.comp        = composition*1000;        %mg/gDW
-data.var.min     = variability.min*1000;    %mg/gDW
-data.var.max     = variability.max*1000;    %mg/gDW
-data.vgluc       = sol.x(posGluc);          %1/h
-data.mu          = mu;                      %1/h
-data.maintenance = sol.x(posMaint);         %mmol/gDWh
-data.netATP      = sol.x(posMaint)/mu;      %mmol/gDW
+data.comp        = composition*1000;	%mg/gDW
+data.lipVar.min  = lipVar.min*1000;     %mg/gDW
+data.lipVar.max  = lipVar.max*1000;     %mg/gDW
+data.vgluc       = sol.x(posGluc);      %1/h
+data.mu          = mu;                  %1/h
+data.maintenance = sol.x(posMaint);     %mmol/gDWh
+data.netATP      = sol.x(posMaint)/mu;	%mmol/gDW
 
 end
 
