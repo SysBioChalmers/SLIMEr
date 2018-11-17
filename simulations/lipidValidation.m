@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % lipidValidation
 %
-% Benjamin J. Sanchez. Last update: 2018-09-09
+% Benjamin J. Sanchez. Last update: 2018-11-17
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 rng default
@@ -48,9 +48,10 @@ for i = 1:Ncond
     abundance_modS{i} = lipidRandomSampling(model_SLIMEr_val{i},data,Nsim);
     
     %Add experimental and simulated lipids:
-    lipids(Nsim*(2*i-2)+i,:) = data.abundance';
-    lipids((Nsim*(2*i-2)+i+1):(Nsim*(2*i-1)+i),:) = abundance_modC{i}';
-    lipids((Nsim*(2*i-1)+i+1):(Nsim*(2*i)+i),:)   = abundance_modS{i}';
+    Nexp = 2*Nsim*(i-1)+i;
+    lipids(Nexp,:) = data.abundance';
+    lipids((Nexp+1):(Nexp+Nsim),:)        = abundance_modC{i}';
+    lipids((Nexp+Nsim+1):(Nexp+2*Nsim),:) = abundance_modS{i}';
     
     %Averages - stds - errors:
     means       = [mean(abundance_modC{i},2) mean(abundance_modS{i},2)];
@@ -156,17 +157,25 @@ lipids = log10(lipids);
 [loadings,scores,~,~,explained] = pca(lipids);
 figure('position', [100,100,600,600])
 hold on
-for i = 1:Ncond
-    h1(i) = plot(scores((Nsim*(2*i-2)+i+1):(Nsim*(2*i-1)+i),1), ...
-                 scores((Nsim*(2*i-2)+i+1):(Nsim*(2*i-1)+i),2), ...
-                 'o','Color',[1 1 0]*(1/10+i/Ncond*9/10),'MarkerSize',5);
-    h2(i) = plot(scores((Nsim*(2*i-1)+i+1):(Nsim*(2*i)+i),1), ...
-                 scores((Nsim*(2*i-1)+i+1):(Nsim*(2*i)+i),2), ...
-                 'o','Color',[0 0 1]*(1/10+i/Ncond*9/10),'MarkerSize',5);
+rng default
+for j = 1:5:Nsim
+    condIndexes = randperm(Ncond);
+    for i = condIndexes
+        intensity = (1/10+i/Ncond*9/10);
+        Nexp  = 2*Nsim*(i-1)+i;
+        h1(i) = plot(scores(Nexp+(j:j+4),1), scores(Nexp+(j:j+4),2),'o', ...
+                     'Color',[1 1 0]*intensity,'MarkerSize',5);
+        h2(i) = plot(scores(Nexp+Nsim+(j:j+4),1),scores(Nexp+Nsim+(j:j+4),2),'o', ...
+                     'Color',[0 0 1]*intensity,'MarkerSize',5);
+    end
+    if rem(j,100) == 1
+        disp(['Plotting PCA: ' num2str(j) '/' num2str(Nsim) ' simulations'])
+    end
 end
 for i = 1:Ncond
-    h3(i) = plot(scores(Nsim*(2*i-2)+i,1),scores(Nsim*(2*i-2)+i,2), ...
-                 'or','MarkerFaceColor','r','MarkerSize',5,'LineWidth',2);
+    Nexp  = 2*Nsim*(i-1)+i;
+    h3(i) = plot(scores(Nexp,1),scores(Nexp,2),'or', ...
+                 'MarkerFaceColor','r','MarkerSize',5,'LineWidth',2);
 end
 x_lab = ['PC1: ' num2str(explained(1),2) '% of variation'];
 y_lab = ['PC2: ' num2str(explained(2),2) '% of variation'];
