@@ -67,14 +67,31 @@ for i = 1:Ncond
     ymax  = ceil(max(y)/5)*5;
     trans = 0.006;
     if i == 1
+        %Get molar proportions:
+        propsExp    = getLipidProportions(data,data.abundance);
+        propsPerm   = getLipidProportions(data,means(:,1));
+        propsSLIMEr = getLipidProportions(data,means(:,2));
+        
+        %Filter out any unmeasured lipid class:
+        names       = data.allBacks(~isnan(sum(propsExp,2)));
+        propsPerm   = propsPerm(~isnan(sum(propsExp,2)),:);
+        propsSLIMEr = propsSLIMEr(~isnan(sum(propsExp,2)),:);
+        propsExp    = propsExp(~isnan(sum(propsExp,2)),:);
+        
+        %Estimate molar proportions for a hypothetical restrictive model:
+        dataCon    = readEjsingData(i);
+        dataCon    = convertEjsingData(dataCon,model,true);
+        chainMWs   = getMWfromFormula(dataCon.chainData.formulas);	% g/mmol
+        chainAbund = dataCon.chainData.abundance;                   % g/gDW
+        chainAbund = chainAbund./chainMWs;                          % mmol/gDW
+        chainProps = chainAbund/sum(chainAbund)*100;                % mol%
+        propsRest  = ones(size(propsExp)).*chainProps';
+        
         %Fig S2: Experimental chain distribution
         xlength = 1350;
         figure('position', [100,100,xlength,400])
-        expProps = getLipidProportions(data,data.abundance);
-        names    = data.allBacks(~isnan(sum(expProps,2)));
-        expProps = expProps(~isnan(sum(expProps,2)),:);
-        color    = sampleCVDmap(6);
-        barPlot(expProps,names,'[molar %]',color,100,xlength,[],true);
+        color = sampleCVDmap(6);
+        barPlot(propsExp,names,'[molar %]',color,100,xlength,[],true);
         legend(data.allChains,'location','eastoutside')
         legend('boxoff')
         
@@ -129,6 +146,20 @@ for i = 1:Ncond
                  ['\color[rgb]{0 0 1} ' modelNames{2}],'Location','northwest');
         legend('boxoff')
         hold off
+        
+        %Fig SX: Comparing molar proportions
+        figure('position', [100,100,xlength,1000])
+        color  = sampleCVDmap(4);
+        Nchain = length(propsExp(1,:)); 
+        for j = 1:Nchain
+            subplot(Nchain,1,j)
+            nameChain = ['C' data.allChains{j} ' [%]'];
+            props     = [propsRest(:,j) propsPerm(:,j) propsSLIMEr(:,j) propsExp(:,j)];
+            barPlot(props,names,nameChain,color,100,xlength,[],false);
+            legend('Restrictive Model','Permissive Model','SLIMEr Model', ...
+                   'Experimental Data','location','eastoutside')
+            legend('boxoff')
+        end
         
         figure('position', [100,100,xlength,600])
     else
