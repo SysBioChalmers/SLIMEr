@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % lipidValidation
 %
-% Benjamin J. Sanchez. Last update: 2018-11-17
+% Benjamin J. Sanchez. Last update: 2018-11-18
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 rng default
@@ -23,10 +23,10 @@ for i = 1:Ncond
     %Read experimental data for each condition:
     data = readEjsingData(i);
     data = convertEjsingData(data,model,false);
-    data.metNames       = data.metNames(1:end-1);       %filter out ergosterol
-    data.molarAbundance = data.molarAbundance(1:end-1);	%mol/mol
-    data.abundance      = data.abundance(1:end-1)*1000;	%mg/gDW
-    data.std            = data.std(1:end-1)*1000;       %mg/gDW
+    data.metNames  = data.metNames(1:end-1);        %filter out ergosterol
+    data.abundance = data.abundance(1:end-1)*1000;	%mg/gDW
+    data.std       = data.std(1:end-1)*1000;        %mg/gDW
+    data.MWs       = data.MWs(1:end-1)*1000;        %mg/mol
     
     %Get backbone & chain information:
     data.backNames  = cell(size(data.metNames));
@@ -70,19 +70,11 @@ for i = 1:Ncond
         %Fig S2: Experimental chain distribution
         xlength = 1350;
         figure('position', [100,100,xlength,400])
-        molarProps = zeros(length(data.allBacks),length(data.allChains));
-        for j = 1:length(data.metNames)
-            pos_b = strcmp(data.allBacks,data.backNames{j});
-            for k = 1:length(data.chainNames{j})
-                pos_c = strcmp(data.allChains,data.chainNames{j}{k});
-                molarProps(pos_b,pos_c) = molarProps(pos_b,pos_c) + data.molarAbundance(j);
-            end
-        end
-        molarProps = molarProps./sum(molarProps,2)*100;
-        names      = data.allBacks(~isnan(sum(molarProps,2)));
-        molarProps = molarProps(~isnan(sum(molarProps,2)),:);
-        color      = sampleCVDmap(6);
-        barPlot(molarProps,names,'[molar %]',color,100,xlength,[],true);
+        expProps = getLipidProportions(data,data.abundance);
+        names    = data.allBacks(~isnan(sum(expProps,2)));
+        expProps = expProps(~isnan(sum(expProps,2)),:);
+        color    = sampleCVDmap(6);
+        barPlot(expProps,names,'[molar %]',color,100,xlength,[],true);
         legend(data.allChains,'location','eastoutside')
         legend('boxoff')
         

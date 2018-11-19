@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % data = convertEjsingData(data,model,condense)
 %
-% Benjamin J. Sanchez. Last update: 2018-09-09
+% Benjamin J. Sanchez. Last update: 2018-11-18
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function data = convertEjsingData(data_old,model,condense)
@@ -49,8 +49,8 @@ if condense
     data.chainData = changeUnits(data.chainData,chainMWs);
 else
     %Only change units to g/gDW:
-    data = changeUnits(data_old,MWs);
-    data.molarAbundance = data_old.abundance;
+    data     = changeUnits(data_old,MWs);
+    data.MWs = MWs;
 end
 
 %Add missing data: composition and fluxes
