@@ -147,7 +147,7 @@ for i = 1:Ncond
         legend('boxoff')
         hold off
         
-        %Fig SX: Comparing molar proportions
+        %Fig S5: Comparing molar proportions
         figure('position', [100,100,xlength,1000])
         color  = sampleCVDmap(4);
         Nchain = length(propsExp(1,:)); 
@@ -165,7 +165,7 @@ for i = 1:Ncond
     else
         xlength = 1000;
     end
-    %Fig S5: Random sampling at all conditions
+    %Fig S6: Random sampling at all conditions
     subplot(Ncond,1,Ncond+1-i)
     barPlot(data.abundance,data.metNames,'[mg/gDW]','r',ymax,xlength,data.std);
     hold on
