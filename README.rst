@@ -32,7 +32,7 @@ Contributors
 -  `Feiran Li <https://www.chalmers.se/en/staff/Pages/feiranl.aspx>`__ (`@feiranl <https://github.com/feiranl>`__), Chalmers University of Technology, Gothenburg Sweden
 -  `Benjamin J. Sanchez <https://www.chalmers.se/en/staff/Pages/bensan.aspx>`__ (`@BenjaSanchez <https://github.com/benjasanchez>`__), Chalmers University of Technology, Gothenburg Sweden
 
-.. |zenodo| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.1494241.svg
-   :target: https://doi.org/10.5281/zenodo.1494241
+.. |zenodo| image:: https://zenodo.org/badge/111809164.svg
+   :target: https://zenodo.org/badge/latestdoi/111809164
 .. |version| image:: https://badge.fury.io/gh/sysbiochalmers%2Fslimer.svg
    :target: https://badge.fury.io/gh/sysbiochalmers%2Fslimer
