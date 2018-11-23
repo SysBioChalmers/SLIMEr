@@ -5,7 +5,7 @@
 
 Collection of scripts for adding SLIME (Split Lipids Into Measurable Entities) reactions into the genome-scale model of yeast. For more info, refer to the current pre-print: `SLIMEr: probing flexibility of lipid metabolism in yeast with an improved constraint-based modeling framework <https://www.biorxiv.org/content/early/2018/09/14/324863>`__.
 
-Last update: 2018-09-14
+Last update: 2018-11-22
 
 This repository is administered by Benjamin J. Sanchez (`@BenjaSanchez <https://github.com/benjasanchez>`__), Division of Systems and Synthetic Biology, Department of Biology and Biological Engineering, Chalmers University of Technology.
 
