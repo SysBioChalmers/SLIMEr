@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % lipidValidation
 %
-% Benjamin J. Sanchez. Last update: 2018-09-09
+% Benjamin J. Sanchez. Last update: 2018-11-18
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 rng default
@@ -23,10 +23,10 @@ for i = 1:Ncond
     %Read experimental data for each condition:
     data = readEjsingData(i);
     data = convertEjsingData(data,model,false);
-    data.metNames       = data.metNames(1:end-1);       %filter out ergosterol
-    data.molarAbundance = data.molarAbundance(1:end-1);	%mol/mol
-    data.abundance      = data.abundance(1:end-1)*1000;	%mg/gDW
-    data.std            = data.std(1:end-1)*1000;       %mg/gDW
+    data.metNames  = data.metNames(1:end-1);        %filter out ergosterol
+    data.abundance = data.abundance(1:end-1)*1000;	%mg/gDW
+    data.std       = data.std(1:end-1)*1000;        %mg/gDW
+    data.MWs       = data.MWs(1:end-1)*1000;        %mg/mol
     
     %Get backbone & chain information:
     data.backNames  = cell(size(data.metNames));
@@ -48,9 +48,10 @@ for i = 1:Ncond
     abundance_modS{i} = lipidRandomSampling(model_SLIMEr_val{i},data,Nsim);
     
     %Add experimental and simulated lipids:
-    lipids(Nsim*(2*i-2)+i,:) = data.abundance';
-    lipids((Nsim*(2*i-2)+i+1):(Nsim*(2*i-1)+i),:) = abundance_modC{i}';
-    lipids((Nsim*(2*i-1)+i+1):(Nsim*(2*i)+i),:)   = abundance_modS{i}';
+    Nexp = 2*Nsim*(i-1)+i;
+    lipids(Nexp,:) = data.abundance';
+    lipids((Nexp+1):(Nexp+Nsim),:)        = abundance_modC{i}';
+    lipids((Nexp+Nsim+1):(Nexp+2*Nsim),:) = abundance_modS{i}';
     
     %Averages - stds - errors:
     means       = [mean(abundance_modC{i},2) mean(abundance_modS{i},2)];
@@ -66,22 +67,31 @@ for i = 1:Ncond
     ymax  = ceil(max(y)/5)*5;
     trans = 0.006;
     if i == 1
+        %Get molar proportions:
+        propsExp    = getLipidProportions(data,data.abundance);
+        propsPerm   = getLipidProportions(data,means(:,1));
+        propsSLIMEr = getLipidProportions(data,means(:,2));
+        
+        %Filter out any unmeasured lipid class:
+        names       = data.allBacks(~isnan(sum(propsExp,2)));
+        propsPerm   = propsPerm(~isnan(sum(propsExp,2)),:);
+        propsSLIMEr = propsSLIMEr(~isnan(sum(propsExp,2)),:);
+        propsExp    = propsExp(~isnan(sum(propsExp,2)),:);
+        
+        %Estimate molar proportions for a hypothetical restrictive model:
+        dataCon    = readEjsingData(i);
+        dataCon    = convertEjsingData(dataCon,model,true);
+        chainMWs   = getMWfromFormula(dataCon.chainData.formulas);	% g/mmol
+        chainAbund = dataCon.chainData.abundance;                   % g/gDW
+        chainAbund = chainAbund./chainMWs;                          % mmol/gDW
+        chainProps = chainAbund/sum(chainAbund)*100;                % mol%
+        propsRest  = ones(size(propsExp)).*chainProps';
+        
         %Fig S2: Experimental chain distribution
         xlength = 1350;
         figure('position', [100,100,xlength,400])
-        molarProps = zeros(length(data.allBacks),length(data.allChains));
-        for j = 1:length(data.metNames)
-            pos_b = strcmp(data.allBacks,data.backNames{j});
-            for k = 1:length(data.chainNames{j})
-                pos_c = strcmp(data.allChains,data.chainNames{j}{k});
-                molarProps(pos_b,pos_c) = molarProps(pos_b,pos_c) + data.molarAbundance(j);
-            end
-        end
-        molarProps = molarProps./sum(molarProps,2)*100;
-        names      = data.allBacks(~isnan(sum(molarProps,2)));
-        molarProps = molarProps(~isnan(sum(molarProps,2)),:);
-        color      = sampleCVDmap(6);
-        barPlot(molarProps,names,'[molar %]',color,100,xlength,[],true);
+        color = sampleCVDmap(6);
+        barPlot(propsExp,names,'[molar %]',color,100,xlength,[],true);
         legend(data.allChains,'location','eastoutside')
         legend('boxoff')
         
@@ -137,11 +147,25 @@ for i = 1:Ncond
         legend('boxoff')
         hold off
         
+        %Fig S5: Comparing molar proportions
+        figure('position', [100,100,xlength,1000])
+        color  = sampleCVDmap(4);
+        Nchain = length(propsExp(1,:)); 
+        for j = 1:Nchain
+            subplot(Nchain,1,j)
+            nameChain = ['C' data.allChains{j} ' [%]'];
+            props     = [propsRest(:,j) propsPerm(:,j) propsSLIMEr(:,j) propsExp(:,j)];
+            barPlot(props,names,nameChain,color,100,xlength,[],false);
+            legend('Restrictive Model','Permissive Model','SLIMEr Model', ...
+                   'Experimental Data','location','eastoutside')
+            legend('boxoff')
+        end
+        
         figure('position', [100,100,xlength,600])
     else
         xlength = 1000;
     end
-    %Fig S5: Random sampling at all conditions
+    %Fig S6: Random sampling at all conditions
     subplot(Ncond,1,Ncond+1-i)
     barPlot(data.abundance,data.metNames,'[mg/gDW]','r',ymax,xlength,data.std);
     hold on
@@ -156,17 +180,25 @@ lipids = log10(lipids);
 [loadings,scores,~,~,explained] = pca(lipids);
 figure('position', [100,100,600,600])
 hold on
-for i = 1:Ncond
-    h1(i) = plot(scores((Nsim*(2*i-2)+i+1):(Nsim*(2*i-1)+i),1), ...
-                 scores((Nsim*(2*i-2)+i+1):(Nsim*(2*i-1)+i),2), ...
-                 'o','Color',[1 1 0]*(1/10+i/Ncond*9/10),'MarkerSize',5);
-    h2(i) = plot(scores((Nsim*(2*i-1)+i+1):(Nsim*(2*i)+i),1), ...
-                 scores((Nsim*(2*i-1)+i+1):(Nsim*(2*i)+i),2), ...
-                 'o','Color',[0 0 1]*(1/10+i/Ncond*9/10),'MarkerSize',5);
+rng default
+for j = 1:5:Nsim
+    condIndexes = randperm(Ncond);
+    for i = condIndexes
+        intensity = (1/10+i/Ncond*9/10);
+        Nexp  = 2*Nsim*(i-1)+i;
+        h1(i) = plot(scores(Nexp+(j:j+4),1), scores(Nexp+(j:j+4),2),'o', ...
+                     'Color',[1 1 0]*intensity,'MarkerSize',5);
+        h2(i) = plot(scores(Nexp+Nsim+(j:j+4),1),scores(Nexp+Nsim+(j:j+4),2),'o', ...
+                     'Color',[0 0 1]*intensity,'MarkerSize',5);
+    end
+    if rem(j,100) == 1
+        disp(['Plotting PCA: ' num2str(j) '/' num2str(Nsim) ' simulations'])
+    end
 end
 for i = 1:Ncond
-    h3(i) = plot(scores(Nsim*(2*i-2)+i,1),scores(Nsim*(2*i-2)+i,2), ...
-                 'or','MarkerFaceColor','r','MarkerSize',5,'LineWidth',2);
+    Nexp  = 2*Nsim*(i-1)+i;
+    h3(i) = plot(scores(Nexp,1),scores(Nexp,2),'or', ...
+                 'MarkerFaceColor','r','MarkerSize',5,'LineWidth',2);
 end
 x_lab = ['PC1: ' num2str(explained(1),2) '% of variation'];
 y_lab = ['PC2: ' num2str(explained(2),2) '% of variation'];

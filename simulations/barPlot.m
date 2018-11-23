@@ -51,7 +51,10 @@ end
 
 %Various options:
 text_size = 12;
-plotOptions([0.5,M+0.5],[0 ymax],'',['Abundance ' units],1:length(names),'',names,'',text_size)
+if startsWith(units,'[')
+    units = ['Abundance ' units];
+end
+plotOptions([0.5,M+0.5],[0 ymax],'',units,1:length(names),'',names,'',text_size)
 axis = gca;
 axis.XAxis.TickLength = [0,0];
 hold off
